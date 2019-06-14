@@ -3,7 +3,10 @@
 
 <div class="row">
 	<hr>
-	user : <b><TMPL_VAR NAME=login_firstname> <TMPL_VAR NAME=login_name></b> 
+	user :&nbsp;<b><TMPL_VAR NAME=login_firstname> <TMPL_VAR NAME=login_name></b>&nbsp;|&nbsp;<a href="mailto:1234@epfl.ch">contact</a>&nbsp;|&nbsp;
+	<TMPL_IF NAME=browser_FR><a href="/docs/CV-fr.pdf" target="_blank"><TMPL_VAR NAME=corp_ident></a>
+	<TMPL_ELSE><a href="/docs/CV-en.pdf" target="_blank"><TMPL_VAR NAME=corp_ident></a>
+	</TMPL_IF>
 </div>
 
 </div>

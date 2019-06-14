@@ -1,11 +1,11 @@
 <TMPL_INCLUDE NAME=header.tmpl>
 
-<div style="padding: 20px;">
+<div style="padding: 0 20px 20px 20px;">
 
 	<TMPL_IF NAME=name>
-		<div class="big bold"><a href="/edit?scipertodo=<TMPL_VAR NAME=scipertodo>"><TMPL_VAR NAME=neworder></a></div>
+			<div class="big"><a href="/edit?scipertodo=<TMPL_VAR NAME=scipertodo>"><TMPL_VAR NAME=neworder></a></div>
+		<div class="bigger"><TMPL_VAR NAME=orders_label></div>
 		<br>
-		<div class="bigger bold"><TMPL_VAR NAME=orders_label></div>
 		<table width=100%>
 		<tr class="bold gray_bg">
 			<td class="gray_bg">Commande</td>

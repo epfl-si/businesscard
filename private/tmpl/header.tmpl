@@ -1,13 +1,12 @@
 <html>
 <head>
-<title>Repro - cartes de visite</title>
 <meta charset="utf-8" />
 
-<link rel="shortcut icon" type="image/x-icon" href="//web2018.epfl.ch/1.0.2/icons/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="//web2018.epfl.ch/1.0.2/icons/favicon-16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="//web2018.epfl.ch/1.0.2/icons/favicon-32.png">
-<link rel="apple-touch-icon" sizes="180x180" href="//web2018.epfl.ch/1.0.2/icons/apple-touch-icon.png">
-<link rel="stylesheet" href="//web2018.epfl.ch/1.0.2/css/elements.min.css">
+<link rel="shortcut icon" type="image/x-icon" href="//web2018.epfl.ch/2.1.0/icons/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="//web2018.epfl.ch/2.1.0/icons/favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="//web2018.epfl.ch/2.1.0/icons/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="//web2018.epfl.ch/2.1.0/icons/apple-touch-icon.png">
+<link rel="stylesheet" href="//web2018.epfl.ch/2.1.0/css/elements.min.css">
 
 <link rel="stylesheet" href="/styles/businesscard.css">
 <script src="/js/businesscard.js" type="text/javascript"></script>
@@ -23,36 +22,71 @@
 		</a>
 	</div>
 	<h1>Centre d'impression Repro</h1>
+
+	<!-- language switcher, two elements -->
+<nav class="nav-lang nav-lang-short ml-auto pr-lg-5">
+		<ul>
+			<li>
+				<TMPL_IF NAME=browser_EN>
+						<a href="/?scipertodo=<TMPL_VAR NAME=scipertodo>&nocmd=<TMPL_VAR NAME=nocmd>&lang=fr" aria-label="Français" class="change_lang_fr">FR</a>
+					</li>
+					<li>
+						<span aria-label="English" class="active change_lang_en">EN</span>
+					</li>
+				<TMPL_ELSE>
+					<li>
+						<span aria-label="Français" class="active change_lang_en">FR</span>
+					</li>
+					<li>
+						<a href="/?scipertodo=<TMPL_VAR NAME=scipertodo>&nocmd=<TMPL_VAR NAME=nocmd>&lang=en" aria-label="English" class="change_lang_fr">EN</a>
+					</li>
+				</TMPL_IF>
+		</ul>
+</nav>
 </header>
 
 <div class="container" style="margin-left: 40px;">
 <div class="row">
   <div class="col-md4" >
-	<a href="/" class="bold"><TMPL_VAR NAME=cards></a>
-	<br>
 
 	<TMPL_IF NAME=isAdmin>
+		<a href="/" class="bold"><TMPL_VAR NAME=cards></a>
 		<br>
-		<b>By status</b>
+		<br>
+		<b><TMPL_VAR NAME=label_by_status></b>
 		<br>
 		<TMPL_LOOP NAME=status_loop>
 			<li><span class="blue bold"><TMPL_VAR NAME=status_nb></span> <a href="/list?etat=<TMPL_VAR NAME=status_id>"><TMPL_VAR NAME=status_label></a></li>
 		</TMPL_LOOP>
 		<hr>
+<!-- 
 		<form action="/">
-		<b>Search people</b>
+		<b><TMPL_VAR NAME=label_search_people></b>
 		<br>
 		<input name="scipertodo">
 		</form>
 		<br>
-		<b>Search command</b>
+ -->
+
+		<b><a href="#" onclick="document.getElementById('users').style.display='block'; return false;"><TMPL_VAR NAME=label_order></b></a>
+		<div id="users" style="position: absolute; left: 10px; top: 310px; z-index: 1000; background-color: #ffffff; padding: 3px; border: 1px solid #aaaaaa; display:none;">
+		<form name="form" action="/edit" method="post" >
+		<select name="scipertodo"  >
+		<option value="">select a person</option>
+		<TMPL_LOOP NAME=users_loop>
+		<option value="<TMPL_VAR NAME=sciper>"><TMPL_VAR NAME=nom> <TMPL_VAR NAME=pnom></option>
+		</TMPL_LOOP>
+		</select>
+		<input type="submit" name="go" value="Commander">
+		</form>
+		</div>
+		<hr>
+
+		<b><TMPL_VAR NAME=label_search_cmd></b>
 		<br>
 		<form action="/edit">
-		<input name="nocmd">
+		<input name="nocmd" size="22">
 		</form>
-	<TMPL_ELSE>
-		<div class="bold"><a href="/edit?scipertodo=<TMPL_VAR NAME=scipertodo>"><TMPL_VAR NAME=neworder></a></div>
-		<div class="bold"><a href="/list?scipertodo=<TMPL_VAR NAME=login_sciper>">My commands</a></div>
 	</TMPL_IF>
 
  	</div>

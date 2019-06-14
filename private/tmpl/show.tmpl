@@ -2,22 +2,63 @@
 
 <TMPL_INCLUDE NAME=card.tmpl>
 
-<!-- REPRO STAFF -->
-	<TMPL_IF NAME=isReproStaff>
-		
-			<!-- EN COURS -->
-			<TMPL_IF NAME=en_cours>
+	<TMPL_IF NAME=status_input>
+
+		<div style="display: flex; justify-content: space-between; width: 80%; padding-top: 25px;">
+				<div style="flex: 1;">
+					<button name="submit" class="bigger bold" onclick="location.href='/edit?nocmd=<TMPL_VAR NAME=nocmd>'; return false;"><TMPL_VAR NAME=fix></button>
+				</div>
+				<div  style="flex: 1;">
+					<button name="delete" class="bigger bold" onclick="
+					if (confirm ('<TMPL_VAR NAME=delete_confirm>')) {
+						location.href='/delcmd?nocmd=<TMPL_VAR NAME=nocmd>&notif=1';
+						return false;
+					} else {
+					 return false;
+					}"><TMPL_VAR NAME=delete_label>
+					</button>
+				</div>
+			
+				<div id="order_button"  style="flex: 1;">
+					<button name="submit" class="bigger bold" onclick="location.href='/valid?nocmd=<TMPL_VAR NAME=nocmd>'; return false;"><TMPL_VAR NAME=submit_button_label></button>
+				</div>
+		</div>
+
+	</TMPL_IF>
+
+	<TMPL_IF NAME=status_queue>
+		<div style="display: flex; justify-content: space-between; width: 80%; padding-top: 25px;">
+			<div style="flex: 1;">
+				<button name="submit" class="bigger bold" onclick="location.href='/edit?nocmd=<TMPL_VAR NAME=nocmd>'; return false;"><TMPL_VAR NAME=fix></button>
+			</div>
+			<div  style="flex: 1;">
+				<button name="delete" class="bigger bold" onclick="
+				if (confirm ('<TMPL_VAR NAME=delete_confirm>')) {
+					location.href='/delcmd?nocmd=<TMPL_VAR NAME=nocmd>&notif=1';
+					return false;
+				} else {
+				 return false;
+				}"><TMPL_VAR NAME=delete_label>
+				</button>
+			</div>
+
+			</div>
+
+			<TMPL_IF NAME=isReproStaff>
 				<TMPL_INCLUDE NAME=en_cours.tmpl>
 			</TMPL_IF>
-			<!--  -->
-			<TMPL_IF NAME=done>
+
+	</TMPL_IF>
+
+	<TMPL_IF NAME=status_processing>
+		<TMPL_IF NAME=isReproStaff>
 				<div style="display: flex; justify-content: space-between; width: 80%; padding-top: 15px;">
 					<div >
 						<button name="done" class="bigger bold" onclick="location.href='/done?nocmd=<TMPL_VAR NAME=nocmd>'; return false;"">Fermer
 						</button>
 						<br>
 						<br>
-						<b>Fermer et archiver la commande</b>: le bÃ©nÃ©ficiaire de la commande (<TMPL_VAR NAME=firstname> <TMPL_VAR NAME=name>) sera averti par mail pour passer prendre les cartes de visites.
+						<b>Fermer et archiver la commande</b>: le bénéficiaire de la commande (<TMPL_VAR NAME=firstname> <TMPL_VAR NAME=name>) sera averti par mail pour passer prendre les cartes de visites.
 					</div>
 
 					<div >
@@ -33,77 +74,33 @@
 						<br>
 						<b>Annuler cette commande</b> : en cas d'erreur ou abandon de la commande
 					</div>
-				
 				</div>
-
-			</TMPL_IF>
-
-	<TMPL_ELSE>
-		<form action="/valid" method="post">
-		<input name="nocmd" type="hidden" value="<TMPL_VAR NAME=nocmd>">
-
-<!-- ADMIN STAFF -->
-		<TMPL_IF NAME=isAdmin>
-			<br>
-			<TMPL_IF NAME=submit_note>
-				<TMPL_IF NAME=fonds_loop> 
-				<h4>
-					<select name="fond" onchange="showButton(this.options[this.selectedIndex].value, 'order_button');">
-						<option value="">select a fund</option>
-					<TMPL_LOOPNAME=fonds_loop>
-						<option value="<TMPL_VAR NAME=fond_nb>" <TMPL_VAR NAME=fond_selected>><TMPL_VAR NAME=fond_nb> : <TMPL_VAR NAME=fond_label></option>
-					</TMPL_LOOP>
-					</select>
-				</h4>
-				<TMPL_ELSE>
-					<TMPL_IF NAME=fond>
-					<TMPL_ELSE>
-						<div class="red bold">No fonds available</div>
-					</TMPL_IF>
-				</TMPL_IF>
-			</TMPL_IF>
-			
-			<br>
-			<TMPL_VAR NAME=submit_note> 
-			<br>
-		<TMPL_ELSE>
-<!-- USER-->
-			<br>
-			<TMPL_VAR NAME=submit_note> 
-			<br>
 		</TMPL_IF>
-	
-		<div style="display: flex; justify-content: space-between; width: 80%; padding-top: 15px;">
-			<TMPL_IF NAME=del_mod>
-				<div style="flex: 1;">
-					<button name="submit" class="bigger bold" onclick="location.href='/edit?nocmd=<TMPL_VAR NAME=nocmd>'; return false;"><TMPL_VAR NAME=fix></button>
-					<TMPL_IF NAME=mod_note>
-						<br>
-						<br>
-						<TMPL_VAR NAME=mod_note>
-					</TMPL_IF>
-				</div>
-				<div  style="flex: 1;">
-					<button name="delete" class="bigger bold" onclick="
-					if (confirm ('<TMPL_VAR NAME=delete_confirm>')) {
-						location.href='/delcmd?nocmd=<TMPL_VAR NAME=nocmd>&notif=1';
-						return false;
-					} else {
-					 return false;
-					}"><TMPL_VAR NAME=delete_label>
-					</button>
-				</div>
-			</TMPL_IF>
-			
-			<TMPL_IF NAME=submit_button_label>
-				<div id="order_button"  style="flex: 1;" <TMPL_IF NAME=isAdmin><TMPL_UNLESS NAME=fond>class="hide"</TMPL_UNLESS></TMPL_IF>>
-					<button name="submit" class="bigger bold" onclick="form.sumbit()';"><TMPL_VAR NAME=submit_button_label></button>
-				</div>
-			</TMPL_IF>
-		</div>
-	
-		</form>
+
 	</TMPL_IF>
+
+	<TMPL_IF NAME=status_done>
+		<TMPL_IF NAME=isReproStaff>
+			<div style="display: flex; justify-content: space-between; width: 80%; padding-top: 25px;">
+			<div  style="flex: 1;">
+				<button name="delete" class="bigger bold" onclick="
+				if (confirm ('<TMPL_VAR NAME=delete_confirm>')) {
+					location.href='/delcmd?nocmd=<TMPL_VAR NAME=nocmd>&notif=1';
+					return false;
+				} else {
+				 return false;
+				}"><TMPL_VAR NAME=delete_label>
+				</button>
+			</div>
+			</div>
+		</TMPL_IF>
+
+	</TMPL_IF>
+
+	<TMPL_IF NAME=status_archive>
+
+	</TMPL_IF>
+
 
 <TMPL_INCLUDE NAME=footer.tmpl>
 

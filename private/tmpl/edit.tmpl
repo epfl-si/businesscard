@@ -1,12 +1,31 @@
 <TMPL_INCLUDE NAME=header.tmpl>
 
+<div id="popup_alert" class="popup_alert" &nbsp; <TMPL_IF NAME=show_alert>style="display: block;"</TMPL_IF>>
+	<a href="#" class="red bold" style="float: right;" onclick="
+		document.getElementById('popup_alert').style.display='none';
+		show_alert = '';
+		return false;
+		">x</a>
+	<div class="note">
+	<b>ATTENTION - WARNING</b>
+	<br>
+	<span class="italic">Chaque ligne est volontairement bloquée à 40 caractères au maximum; de ce fait nous vous recommandons de <span class="underline">vérifier soigneusement</span> les textes car des mots pourraient être coupés en fin de ligne.</span><br>
+	<br>
+	Vous devez corriger les valeurs sur fond de couleur ci-dessous, qui ont été tronquées.<br>
+	<br>
+	<span class="italic">Each line is deliberately blocked at a maximum of 40 characters; so we advise you to <span class="underline">check the text carrefully</span> because some words may be cut at the end of the line.</span><br>
+	<br>
+	You have to fix the fields here below that have been trimmed.
+	</div>
+</div>
+
 <form name="card" method="post" action="/show">
 	<input name="resp"  		 type="hidden" value="<TMPL_VAR NAME=resp>">
   <input name="scipertodo" type="hidden" value="<TMPL_VAR NAME=scipertodo>">
+  <input name="mail" 			 type="hidden" value="<TMPL_VAR NAME=mail>">
   <input name="nocmd" 		 type="hidden" value="<TMPL_VAR NAME=nocmd>">
-  <input name="fond" 			 type="hidden" value="<TMPL_VAR NAME=fond>">
   <input name="etat" 			 type="hidden" value="<TMPL_VAR NAME=etat>">
-  <input name="update_cmd" type="hidden" value="1">
+  <input name="save_cmd"	 type="hidden" value="1">
 
 	<TMPL_IF NAME=accreds_loop>
 		<div style="width: 100%; border: 1px solid #aaaaaa; padding: 10px;">
@@ -16,11 +35,12 @@
 		<li><a href="/edit?nocmd=<TMPL_VAR NAME=nocmd>&scipertodo=<TMPL_VAR NAME=scipertodo>&unitid=<TMPL_VAR NAME=unitid>&card_lang=<TMPL_VAR NAME=card_lang>"><TMPL_VAR NAME=path1> / <TMPL_VAR NAME=path2> / <TMPL_VAR NAME=path3></a></li>
 		</TMPL_LOOP>
 		</ul>
-		<h4><TMPL_VAR NAME=card_lang_txt> : 
+		<h4><TMPL_VAR NAME=card_lang_note1> : 
 
 		<a href="/edit?nocmd=<TMPL_VAR NAME=nocmd>&scipertodo=<TMPL_VAR NAME=scipertodo>&card_lang=fr"><img src="/images/fr.png" style="height: 25px;"></a>
 		<a href="/edit?nocmd=<TMPL_VAR NAME=nocmd>&scipertodo=<TMPL_VAR NAME=scipertodo>&card_lang=en"><img src="/images/en.png" style="height: 25px;"></a>
 		</h4>
+		<TMPL_VAR NAME=card_lang_note2>
 		</div>
 	</TMPL_IF>
 
@@ -51,76 +71,86 @@
 				</select> pcs (<i><TMPL_VAR NAME=prix>: <TMPL_VAR NAME=prices_list></i>)
 			</div>
 		</div>
+
+		<div class="row">
+
+		<TMPL_IF NAME=fond>
+				<div class="col-md-3"><TMPL_VAR NAME=label_fond></div>
+				<div class="col-md-9"><TMPL_VAR NAME=fond></div>
+			  <input name="fond" type="hidden" value="<TMPL_VAR NAME=fond>">
+		<TMPL_ELSE>
+			<TMPL_IF NAME=fonds_loop> 
+				<div class="col-md-3"><TMPL_VAR NAME=fund_select></div>
+				<div class="col-md-9">
+					<select name="fond">
+						<option value="">select a fund</option>
+					<TMPL_LOOPNAME=fonds_loop>
+						<option value="<TMPL_VAR NAME=fond_nb>" <TMPL_VAR NAME=fond_selected>><TMPL_VAR NAME=fond_nb> : <TMPL_VAR NAME=fond_label></option>
+					</TMPL_LOOP>
+					</select>
+				</div>
+			<TMPL_ELSE>
+				<div class="red bold">No fonds available</div>
+			</TMPL_IF>
+		</TMPL_IF>
+
 	</div>
 
-<!-- 
-	<table border=0 width='99%'>
-	 <tr><td width="20%">Commande no: </td><td><TMPL_VAR NAME=nocmd> </td></tr>
-	 <tr><td>EnregistrÃ©e le:</td><td><TMPL_VAR NAME=date></td></tr>
-	 <tr><td>Etat: </td><td><TMPL_VAR NAME=status></td></tr>
-	 <tr><td>sciper: </td><td><TMPL_VAR NAME=scipertodo></td></tr>
-	 <tr><td><TMPL_VAR NAME=quantite_label>: </td>
-	 		<td>
-				<select name=quantite>
-				<option value='50' >50</option>
-				<option value='100' >100</option>
-				<option value='200' >200</option>
-				<option value='300' >300</option>
-				</select> pcs (<i><TMPL_VAR NAME=prix>: 50 pc Frs 15.-, 100 pc Frs 25.-, 200 pc Frs 30.-, 300 pc Frs 35.-</i>)
-	 		</td>
-	 </tr>
-	</table>
- -->
-	
 	<hr>
 	
 	<table width="99%" border="0" class=gray_bg>
 	 <tr>
 		<td width="30%" valign="top"><span class="blue bold">1</span> <b><TMPL_VAR NAME=label_path></b>:</td>
 		<td>
-			<input id="path1" type="text" name="path1"  value="<TMPL_VAR NAME=path1>" size=48 <TMPL_VAR NAME=path1_alert>> 
+			<input id="path1" type="text" name="path1"  value="<TMPL_VAR NAME=path1>" size=48 <TMPL_VAR NAME=path1_alert> onclick="setBGColor('path1', '#ffffff');"> 
+<!-- 
 			<a href="#"> <img id="path1_img" src="<TMPL_VAR NAME=path1_img>" style="height: 20px;" onclick="toggleVis('path1')"></a>
+ -->
 			<input type="hidden" id="path1_hide" name="path1_hide"  value="<TMPL_VAR NAME=path1_hide>">
 		
 			<br>
-			<input id="path2" type="text" name="path2"  value="<TMPL_VAR NAME=path2>" size=48 <TMPL_VAR NAME=path2_alert>> 
+			<input id="path2" type="text" name="path2"  value="<TMPL_VAR NAME=path2>" size=48 <TMPL_VAR NAME=path2_alert> onclick="setBGColor('path2', '#ffffff');"> 
+<!-- 
 			<a href="#"> <img id="path2_img" src="<TMPL_VAR NAME=path2_img>" style="height: 20px;" onclick="toggleVis('path2')"></a>
+ -->
 			<input type="hidden" id="path2_hide" name="path2_hide"  value="<TMPL_VAR NAME=path2_hide>">
 
 			<br>
-			<input id="path3" type="text" name="path3"  value="<TMPL_VAR NAME=path3>" size=48 <TMPL_VAR NAME=path3_alert>> 
+			<input id="path3" type="text" name="path3"  value="<TMPL_VAR NAME=path3>" size=48 <TMPL_VAR NAME=path3_alert> onclick="setBGColor('path3', '#ffffff');"> 
+<!-- 
 			<a href="#"> <img id="path3_img" src="<TMPL_VAR NAME=path3_img>" style="height: 20px;" onclick="togglePathShow('path3')" ></a>
+ -->
 			<input type="hidden" id="path3_hide" name="path3_hide"  value="<TMPL_VAR NAME=path3_hide>">
 			
 			<br>
-			<input id="path4" type="text" name="path4"  value="<TMPL_VAR NAME=path4>" size=48 <TMPL_VAR NAME=path4_alert>> 
+			<input id="path4" type="text" name="path4"  value="<TMPL_VAR NAME=path4>" size=48 <TMPL_VAR NAME=path4_alert> onclick="setBGColor('path4', '#ffffff');"> 
 
 		</td>
 	 </tr>
 	<tr>
 		<td><span class='blue bold'>2</span> <TMPL_VAR NAME=label_title> </td>
-		<td><input id=titre name=titre value="" size=48 ></td>
+		<td><input id=titre name=titre value="" size=48  <TMPL_VAR NAME=titre_alert>  onclick="setBGColor('titre', '#ffffff');"></td>
 	<tr>
 		<td><b><TMPL_VAR NAME=label_firstname></b> </td>
-		<td><input id=pnom name=firstname value="<TMPL_VAR NAME=firstname>"" size=48 ></td>
+		<td><input id=pnom name=firstname value="<TMPL_VAR NAME=firstname>"" size=48 <TMPL_VAR NAME=firstname_alert> onclick="setBGColor('pnom', '#ffffff');"></td>
 	<tr>
 		<td><b><TMPL_VAR NAME=label_name></b> </td>
-		<td><input id=nom name=name value="<TMPL_VAR NAME=name>" size=48 ></td>
+		<td><input id=nom name=name value="<TMPL_VAR NAME=name>" size=48 <TMPL_VAR NAME=name_alert>  onclick="setBGColor('nom', '#ffffff');"></td>
 	<tr>
 		<td><TMPL_VAR NAME=label_function> </td>
-		<td><input id=fonc1 name=fonction1 value="<TMPL_VAR NAME=fonction1>" size=48 ></td>
+		<td><input id=fonc1 name=fonction1 value="<TMPL_VAR NAME=fonction1>" size=48 <TMPL_VAR NAME=fonction1_alert>  onclick="setBGColor('fonc1', '#ffffff');"></td>
 	<tr>
 		<td> </td>
-		<td><input id=fonc2 name=fonction2 value="<TMPL_VAR NAME=fonction2>" size=48 ></td>
+		<td><input id=fonc2 name=fonction2 value="<TMPL_VAR NAME=fonction2>" size=48 <TMPL_VAR NAME=fonction2_alert>   onclick="setBGColor('fonc2', '#ffffff');"></td>
 	<tr>
 		<td><span class='blue bold'>3</span> <TMPL_VAR NAME=label_phone> </td>
-		<td><input id=tel name=phone1 value="<TMPL_VAR NAME=phone1>" size=48 ></td>
+		<td><input id=tel name=phone1 value="<TMPL_VAR NAME=phone1>" size=48 <TMPL_VAR NAME=phone1_alert> onclick="setBGColor('tel', '#ffffff');"></td>
 	<tr>
 		<td> </td>
-		<td><input id=mobile name=phone2 value="<TMPL_VAR NAME=phone2>" size=48 ></td>
+		<td><input id=mobile name=phone2 value="<TMPL_VAR NAME=phone2>" size=48 <TMPL_VAR NAME=phone2_alert>  onclick="setBGColor('mobile', '#ffffff');"></td>
 	<tr>
 		<td>Mail </td>
-		<td><input id=email name=email value="<TMPL_VAR NAME=email>" size=48 ></td>
+		<td><input id=email name=email value="<TMPL_VAR NAME=email>" size=48 <TMPL_VAR NAME=femail_alert>  onclick="setBGColor('email', '#ffffff');"></td>
 	</table>
 		
 	<div class="bold" style="margin-top: 15px;"><span class='blue'>4</span> <TMPL_VAR NAME=label_type></div>
@@ -133,21 +163,20 @@
 	</div>
 
 	<div id="display_adresse" style="display: <TMPL_IF NAME=card_type_adresse>block;<TMPL_ELSE>none;</TMPL_IF> width: 70%; float: left;">
-		<input id="adresse" name="adresse" value="<TMPL_VAR NAME=adresse>" size="42" <TMPL_VAR NAME=adresse_alert>>
+		<input id="adresse" name="adresse" value="<TMPL_VAR NAME=adresse>" size="42" <TMPL_VAR NAME=adresse_alert>  onclick="setBGColor('adresse', '#ffffff');">
 	</div>
 	<div id="display_people" style="display: <TMPL_IF NAME=card_type_people>block;<TMPL_ELSE>none;</TMPL_IF> width: 70%; float: left;">
 		people.epfl.ch/<TMPL_VAR NAME=mailid>
 	</div>
 	<div id="display_web" style="display: <TMPL_IF NAME=card_type_webe>block;<TMPL_ELSE>none;</TMPL_IF> width: 70%; float: left;">
-	  <input name="web" value="<TMPL_VAR NAME=web>"  size="48">
+	  <input name="web" value="<TMPL_VAR NAME=web>"  size="48" <TMPL_VAR NAME=web_alert>  onclick="setBGColor('display_web', '#ffffff');">
 	</div>
 	
 	<br>
 	<div style="margin-top: 20px;">
-	<p><b>Remarques :</b> (max 255 car) <br>
-	<br><textarea name=comments rows=3 style="width: 75%;"><TMPL_VAR NAME=comments></textarea>
 	<hr>
 	<div style="display: flex; justify-content: space-between; width: 60%;">
+		<TMPL_IF NAME=nocmd>
 		<div style="flex: 1;">
 			<button name="delete" class="bigger bold" onclick="
 			if (confirm ('<TMPL_VAR NAME=delete_confirm>')) {
@@ -158,11 +187,13 @@
 			}"><TMPL_VAR NAME=delete_label>
 			</button>
 		</div>
+		</TMPL_IF>
 		<div style="flex: 1;">
-			<button name="submit" class="bigger bold"><TMPL_VAR NAME=show></button>
+			<button name="save" class="bigger bold" onclick="return chkFields();"><TMPL_VAR NAME=show></button>
 		</div>
 	</div>
 </form>
-	
+
+
 <TMPL_INCLUDE NAME=footer.tmpl>
 

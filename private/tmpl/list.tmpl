@@ -1,22 +1,40 @@
 <TMPL_INCLUDE NAME=header.tmpl>
 
-<div style="padding: 20px;">
+<div style="padding: 0">
 
 	<TMPL_IF NAME=cards_loop>
-		<div class="bigger bold"><TMPL_VAR NAME=orders_label></div>
-		<table width=100%>
+		<form name="form" action="/donem">
+		<div class="bigger bold" style="padding-bottom: 20px;">
+			<TMPL_VAR NAME=orders_label>
+		</div>
+
+		<TMPL_IF NAME=status_processing>
+		<a href="#" onclick="setAllBoxes('cmd_todo'); return false;">Selectionner tout</a> |
+		<a href="#" onclick="resetAllBoxes('cmd_todo'); return false;">Enlever les sélections</a> |
+		<button name="go" onclick="form.submit(); return false;" >Traiter la sélection</button>
+		<hr>
+		</TMPL_IF>
+
+		<table width="100%">
 		<tr class="bold gray_bg">
-			<td class="gray_bg">Commande</td>
+			<td class="gray_bg"><TMPL_VAR NAME=label_commande></td>
 			<td class="gray_bg">Date</td>
-			<td class="gray_bg">Nom PrÃ©nom</td>
-			<td class="gray_bg">QuantitÃ©</td>
-			<td class="gray_bg">Etat</td>
+			<td class="gray_bg">Admin</td>
+			<td class="gray_bg"><TMPL_VAR NAME=label_name> <TMPL_VAR NAME=label_firstname></td>
+			<td class="gray_bg"><TMPL_VAR NAME=quantite_label></td>
+			<td class="gray_bg"><TMPL_VAR NAME=label_status></td>
 		</tr>
 		<TMPL_LOOP NAME=cards_loop>
 			<TMPL_IF NAME=action>
 			<tr>
-				<td><a href="/<TMPL_VAR NAME=action>?nocmd=<TMPL_VAR NAME=nocmd>"><TMPL_VAR NAME=nocmd></a></td>
+				<td>
+					<TMPL_IF NAME=status_processing>
+						<input name="cmd_todo" type="checkbox" id="<TMPL_VAR NAME=nocmd>" value="<TMPL_VAR NAME=nocmd>">
+					</TMPL_IF>
+					<a href="/<TMPL_VAR NAME=action>?nocmd=<TMPL_VAR NAME=nocmd>"><TMPL_VAR NAME=nocmd></a>
+				</td>
 				<td><TMPL_VAR NAME=date></td>
+				<td><TMPL_VAR NAME=respname> <TMPL_VAR NAME=respfirstname></td>
 				<td><TMPL_VAR NAME=name> <TMPL_VAR NAME=firstname></td>
 				<td><TMPL_VAR NAME=quantite></td>			
 				<td><TMPL_VAR NAME=status></td>			
@@ -24,7 +42,9 @@
 			</TMPL_IF>
 		</TMPL_LOOP>
 		</table>
-
+		</form>
+	<TMPL_ELSE>
+		<TMPL_VAR NAME=list_empty_note>
 	</TMPL_IF>
 </div>
 

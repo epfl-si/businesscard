@@ -1,14 +1,22 @@
 $tmpl_labels = {
 	wrong_params => {
-		fr	=> qq{Param√®tres non conformes},
+		fr	=> qq{ParamËtres non conformes},
 		en	=> qq{Illegal parameters},
 	},
 	no_access => {
-		fr	=> qq{Pas de droits d'acc√®s},
+		fr	=> qq{Pas de droits d'accËs},
 		en	=> qq{No access rights},
 	},
+	no_funds => {
+		fr	=> qq{Aucun fond disponible},
+		en	=> qq{No funds available},
+	},
+	no_users => {
+		fr	=> qq{Aucune personne sous votre contrÙle},
+		en	=> qq{No person under your management},
+	},
 	no_rights => {
-		fr	=> qq{Pas de droits de gestions},
+		fr	=> qq{Pas de droits de gestion},
 		en	=> qq{No management rights},
 	},
 	init_templ => {
@@ -32,12 +40,16 @@ $tmpl_labels = {
 		fr	=> qq{Cartes de visite},
 		en	=> qq{Business cards},
 	},
-	card_lang_txt => {
+	card_lang_note1 => {
 		fr	=> qq{Langue du contenu de la carte de visite},
 		en	=> qq{Businesscard Content language},
 	},	
+	card_lang_note2 => {
+		fr	=> qq{Choisir la langue du contenu, puis, cliquer sur l'accrÈditation choisie, si plusieurs},
+		en	=> qq{Select Businesscard Content language, then, choose an accreditaion, if more available},
+	},	
 	accreds_txt => {
-		fr	=> qq{Accr√©ditations},
+		fr	=> qq{AccrÈditations},
 		en	=> qq{Accreditations},
 	},	
 
@@ -70,7 +82,7 @@ $tmpl_labels = {
 		en	=> qq{Preview},
 	},
 	del_note => {
-		fr	=> qq{Commande effac√©e :},
+		fr	=> qq{Commande effacÈe :},
 		en	=> qq{Order deleted},
 	},
 	repro_en_cours => {
@@ -78,28 +90,27 @@ $tmpl_labels = {
 		en	=> qq{Start Processing},
 	},
 	repro_done => {
-		fr	=> qq{Commande effectu√©e},
+		fr	=> qq{Commande terminÈe},
 		en	=> qq{Processed},
 	},
 	db_error => {
-		fr	=> qq{Erreur base de donn√©es},
+		fr	=> qq{Erreur base de donnÈes},
 		en	=> qq{Database error},
 	},
 	quantite_label => {
-		fr	=> qq{Quantit√©},
+		fr	=> qq{QuantitÈ},
 		en	=> qq{Quantity},
 	},
 	person_not_found => {
-		fr	=> qq{Personne pas trouv√©e ou sans droit pour commander des cartes de visite},
+		fr	=> qq{Personne pas trouvÈe ou sans droit pour commander des cartes de visite},
 		en	=> qq{Person not found or no rights to order EPFL businesscards},
 	},
 	cmd_not_found => {
 		fr	=> qq{Commande inconnue},
 		en	=> qq{Order not found},
 	},
-
 	no_fund => {
-		fr => qq{Num√©ro de fond absent},
+		fr => qq{NumÈro de fond absent},
 		en => qq{Fund numer missing},
 	},
 	fix	=> {
@@ -111,12 +122,41 @@ $tmpl_labels = {
 		en	=> qq{
 		},
 	},
+	label_status	=> {
+		fr	=> qq{Etat},
+		en	=> qq{Status},
+	},
+	label_by_status	=> {
+		fr	=> qq{Par Ètat},
+		en	=> qq{By status},
+	},
+	label_search_people	=> {
+		fr	=> qq{Chercher une personne},
+		en	=> qq{Search people},
+	},
+	label_search_cmd=> {
+		fr	=> qq{Chercher une commande},
+		en	=> qq{Search order},
+	},
+	label_order=> {
+		fr	=> qq{Passer une commande},
+		en	=> qq{Order businesscards},
+	},
+	label_description=> {
+		fr	=> qq{Description du contenu du verso de la carte de visite},
+		en	=> qq{Businesscard content description, verso side},
+	},
+	label_commande	=> {
+		fr	=> qq{Commande},
+		en	=> qq{Order},
+	},
+
 	label_fond	=> {
 		fr	=> qq{Fond},
 		en	=> qq{Fund},
 	},
 	label_path	=> {
-		fr	=> qq{Facult√©/Institut/Service/Labo},
+		fr	=> qq{FacultÈ/Institut/Service/Labo},
 		en	=> qq{Faculty/Institute/Service/Lab},
 	},
 	label_title	=> {
@@ -124,7 +164,7 @@ $tmpl_labels = {
 		en	=> qq{Title},
 	},
 	label_firstname=> {
-		fr	=> qq{Pr√©nom},
+		fr	=> qq{PrÈnom},
 		en	=> qq{Firstname},
 	},
 	label_name	=> {
@@ -136,7 +176,7 @@ $tmpl_labels = {
 		en	=> qq{Position},
 	},
 	label_phone	=> {
-		fr	=> qq{T√©l.},
+		fr	=> qq{TÈl.},
 		en	=> qq{Phone},
 	},
 	label_mail	=> {
@@ -150,13 +190,13 @@ $tmpl_labels = {
 	main_note => {
 		fr	=> qq{<b>Attention :</b>
 		<ul>
-		<li>Le d√©lai de production est de maximum cinq jours ouvr√©s.<br>
+		<li>Le dÈlai de production est de maximum cinq jours ouvrÈs.<br>
 		<li>Veuillez consulter <a href="http://www.epfl.ch/repro/"><b>les horaires d'ouverture</b></a> du Centre d'impression
 		</ul>},
-		en	=> qq{<b>Attention :</b>
+		en	=> qq{<b>Note :</b>
 		<ul>
-		<li>Le d√©lai de production est de maximum cinq jours ouvr√©s.<br>
-		<li>Veuillez consulter <a href="http://www.epfl.ch/repro/"><b>les horaires d'ouverture</b></a> du Centre d'impression
+		<li>Processing time is max 5 working days.<br>
+		<li>Please check the <a href="http://www.epfl.ch/repro/"><b>open hours</b></a> of the Print Center
 		</ul>},
 	},	
 	repro_en_cours_note => {
@@ -164,29 +204,48 @@ $tmpl_labels = {
 		en	=> qq{Start command processing},
 	},
 	dem_valid_note => {
-		fr => qq{Cette demande de carte de visite selon la pr√©sentation ci-dessus sera soumise pour approbation √†		},
+		fr => qq{Cette demande de carte de visite selon la prÈsentation ci-dessus sera soumise pour approbation ‡		},
 		en => qq{This request for businesscards order will be submitted for validation to},
 	},
 	dem_valid_done_note => {
-		fr => qq{Cette demande de carte de visite selon la pr√©sentation ci-dessus a √©t√© soumise pour approbation √† },
+		fr => qq{Cette demande de carte de visite selon la prÈsentation ci-dessus a ÈtÈ soumise pour approbation ‡ },
 		en => qq{This request for businesscards order has been submitted for validation to },
 	},
 	mod_note => {
-		fr => qq{Vous pouvez modifier le contenu et/ou la pr√©sentation et suivre de nouveau le processus de validation et soumission tant que la commande n'ait pas √©t√© mise en traitement par la Repro},
+		fr => qq{Vous pouvez modifier le contenu et/ou la prÈsentation et suivre de nouveau le processus de validation et soumission tant que la commande n'ait pas ÈtÈ mise en traitement par la Repro},
 		en => qq{You can modify this businesscard and re-activate the validation process as long as the order has not been processed},
 	},
-
 	validate_note => {
-		fr => qq{S√©lectionner un fond pour Valider et soumettre la commande de cartes de visite},
+		fr => qq{SÈlectionner un fond pour Valider et soumettre la commande de cartes de visite},
 		en => qq{Select a fund to Validate and Submit businesscards order},
 	},
+	fund_select => {
+		fr => qq{SÈlectionner un fond },
+		en => qq{Select a fund },
+	},
 	queue_note => {
-		fr => qq{La commande ci-dessus a √©t√© transmise √† la Reprographie pour impression.<br>},
+		fr => qq{La commande ci-dessus a ÈtÈ transmise ‡ la Reprographie pour impression.<br>},
 		en => qq{This Businesscards order has been submitted for processing to the Printing Service},
 	},
 	done_note => {
-		fr => qq{Cette commande est termin√©e },
+		fr => qq{Cette commande est terminÈe },
 		en => qq{This order has been processed },
+	},
+	list_empty_note => {
+		fr => qq{Aucune commande dans cet Ètat},
+		en => qq{No order for this status},
+	},
+	corp_ident => {
+		fr => qq{IdentitÈ Visuelle},
+		en => qq{Corporate Identity},
+	},
+	corp_ident_quest => {
+		fr => qq{Questions sur le visuel},
+		en => qq{Questions about Corporate Identity},
+	},
+	repro_quest => {
+		fr => qq{Questions sur les dÈlais/quantitÈs},
+		en => qq{Questions about duration/quantities},
 	},
 	
 };

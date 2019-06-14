@@ -24,6 +24,7 @@ my $pi = $ENV {PATH_INFO};
 
 my $config_items = {
 		dinfodb => { active => '1', critical => 'true', label => 'mysql accred/dinfo db access',},
+		bcarddb => { active => '1', critical => 'true', label => 'mysql businesscard db access',},
 };
 my $DEBUG			 		= -f '/opt/dinfo/etc/MASTER' ? 0 : 1;
 
@@ -58,6 +59,31 @@ foreach my $key ( keys %$config_items ) {
 
 	$probe->{items}->{$key}->{status} = 'ko';
 
+	if ( $key eq 'bcarddb' ) {
+		my $dbh = new Cadi::CadiDB (
+			dbname => 'businesscard',
+			trace => 1,
+			utf8 => 1,
+		) ;
+		if ( $dbh ) {
+			my $sql = qq{SELECT nocmd FROM businesscard.cmds LIMIT 0, 1};
+			my $sth = $dbh->prepare( $sql) ;
+			if ($sth) {
+				$sth->execute () ;
+				my $sciper = $sth->fetchrow;
+				if ( $sciper ne '' ) {
+					$probe->{items}->{$key}->{status} = 'ok';
+				} else {
+					$probe->{items}->{$key}->{status} = 'ko';
+				}
+			}
+		}
+
+#	- error
+#					$probe->{items}->{$key}->{status} = 'ko';
+
+	}
+	
 	if ( $key eq 'dinfodb' ) {
 		my $dbh = new Cadi::CadiDB (
 			dbname => 'dinfo',
