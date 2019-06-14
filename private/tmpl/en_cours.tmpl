@@ -1,0 +1,34 @@
+				<h2>Préparation pour impression</h2>
+				<div style="width: 75%; background-color: #dddddd; padding: 20px;">
+					<b>Quantité</b> : <TMPL_VAR NAME=quantite>
+					<h3>1. Faculté/Institut/Service/Labo</h3>
+					<TMPL_VAR NAME=path1><br>
+					<TMPL_VAR NAME=path2><br>
+					<TMPL_VAR NAME=path3><br>
+					<TMPL_VAR NAME=path4><br>
+
+					<h3>2. Titre Prénom Nom</h3>
+					<TMPL_VAR NAME=titre><br>
+					<TMPL_VAR NAME=firstname><br>
+					<TMPL_VAR NAME=name><br>
+
+					<h3>3. Fonctions/Tél./Mail</h3>
+					<TMPL_VAR NAME=fonction1><br>
+					<TMPL_VAR NAME=fonction2><br>
+					<TMPL_VAR NAME=phone1><br>
+					<TMPL_VAR NAME=phone2><br>
+					<TMPL_VAR NAME=email><br>
+
+					<h3>4. Adresse/Page people/Web</h3>
+					<TMPL_VAR NAME=line4><br>
+
+				</div>
+				<br>
+				<span class="red">La commande passe en mode <b>en cours</b>, plus de corrections possibles dans la base de données</span>
+				<br>
+				
+					<div style="display: flex; justify-content: space-between; width: 80%; padding-top: 15px;">
+						<div id="order_button" >
+						<button name="submit" class="bigger bold" onclick="location.href='/encours?nocmd=<TMPL_VAR NAME=nocmd>'; return false;"><TMPL_VAR NAME=submit_button_label></button>
+						</div>
+					</div>

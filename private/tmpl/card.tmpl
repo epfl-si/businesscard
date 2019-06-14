@@ -1,0 +1,88 @@
+	
+	<div style="width: 100%; padding: 10px;">
+		<div class="row">
+			<div class="col-md-3">Commande no.</div>
+			<div class="col-md-9"><TMPL_VAR NAME=nocmd></div>
+		</div>
+		<div class="row">
+			<div class="col-md-3">SCIPER</div>
+			<div class="col-md-9"><TMPL_VAR NAME=scipertodo></div>
+		</div>
+		<div class="row">
+			<div class="col-md-3">Date</div>
+			<div class="col-md-9"><TMPL_VAR NAME=date></div>
+		</div>
+		<div class="row">
+			<div class="col-md-3">Etat</div>
+			<div class="col-md-9"><TMPL_VAR NAME=status></div>
+		</div>
+		<div class="row">
+			<div class="col-md-3"><TMPL_VAR NAME=quantite_label></div>
+			<div class="col-md-9"><TMPL_VAR NAME=quantite></div>
+		</div>
+		<div class="row">
+			<div class="col-md-3">Remarques</div>
+			<div class="col-md-9"><TMPL_VAR NAME=comments></div>
+		</div>
+		<div class="row">
+			<div class="col-md-3"><TMPL_VAR NAME=label_fond></div>
+			<div class="col-md-9"><TMPL_VAR NAME=fond></div>
+		</div>
+	</div>
+
+	<table width="750" border="4" cellspacing="0" height="400" cellpadding="20" >
+	<tr>
+	<td width="30%">
+		<table height="100%" border="0" >
+		<tr>
+			<td class="red big bold" valign="top">École polytechnique fédérale de Lausanne</td>
+		</tr>
+		<tr>
+			<td class="red big bold" valign="bottom">
+				<div class="rectangle">.</div>
+				<div style="float: left;"> epfl.ch</div>
+			</td>
+		</tr>
+		</tr>
+		</table>
+	</td>
+	<td width="70%">
+		<table height="100%">
+			<tr>
+			<td height="100" valign="bottom">
+			<div class=" bigger bold show"><TMPL_VAR NAME=path1></div>
+			<div class="bigger bold show"><TMPL_VAR NAME=path2></div>
+		 </tr>
+
+			<tr>
+			<td height="50" valign="top">
+			<div class="  show" ><TMPL_VAR NAME=path3></div>
+			<div class=" biger show" ><TMPL_VAR NAME=path4></div>
+
+			</td>
+			</tr>
+
+		 <tr>
+			<td valign="bottom" style="padding-top: 20px;">
+				<div class="bigger bold">	<TMPL_VAR NAME=firstname> <TMPL_VAR NAME=name></div>
+			 <div class="bigger "><TMPL_VAR NAME=fonction1></div>
+			 <div class="bigger "><TMPL_VAR NAME=fonction2></div>
+			</td>
+			</tr>
+			<tr>
+				<td>
+					<div class="bigger "><TMPL_VAR NAME=phone1></div>
+					 <div class="bigger "><TMPL_VAR NAME=phone2></div>
+					 <div class="bigger "><TMPL_VAR NAME=email></divS>
+				</td>
+			</tr>
+			<tr valign="bottom" height="75">
+				<td>
+				<div class="bigger "><TMPL_VAR NAME=line4></div>
+				</td>
+			</tr>
+			</table>
+	</td>
+	</tr>
+
+	</table>

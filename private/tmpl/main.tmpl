@@ -1,0 +1,29 @@
+<TMPL_INCLUDE NAME=header.tmpl>
+
+<div style="padding: 20px;">
+
+	<TMPL_IF NAME=name>
+		<div class="big bold"><a href="/edit?scipertodo=<TMPL_VAR NAME=scipertodo>"><TMPL_VAR NAME=neworder></a></div>
+		<br>
+		<div class="bigger bold"><TMPL_VAR NAME=orders_label></div>
+		<table width=100%>
+		<tr class="bold gray_bg">
+			<td class="gray_bg">Commande</td>
+			<td class="gray_bg">Date</td>
+			<td class="gray_bg">Etat</td>
+		</tr>
+		<TMPL_LOOP NAME=cards_loop>
+			<tr>
+				<td><a href="/edit?nocmd=<TMPL_VAR NAME=nocmd>"><TMPL_VAR NAME=nocmd></a></td>
+				<td><TMPL_VAR NAME=date></td>
+				<td><TMPL_VAR NAME=status></td>			
+			</tr>
+		</TMPL_LOOP>
+		</table>
+	<TMPL_ELSE>
+		<TMPL_INCLUDE NAME=main_top.tmpl>
+	</TMPL_IF>
+</div>
+
+<TMPL_INCLUDE NAME=footer.tmpl>
+

@@ -1,0 +1,27 @@
+<TMPL_INCLUDE NAME=header.tmpl>
+
+<div style="padding: 20px;">
+	
+	<TMPL_IF NAME=personsloop>
+		<div class="bigger bold">Select a person</div>
+		<table width=100%>
+		<tr class="bold gray_bg">
+			<td class="gray_bg">sciper</td>
+			<td class="gray_bg"><TMPL_VAR NAME=label_name> <TMPL_VAR NAME=label_firstname></td>
+			<td class="gray_bg">Mail</td>
+		</tr>
+		<TMPL_LOOP NAME=personsloop>
+			<tr>
+				<td><a href="/?scipertodo=<TMPL_VAR NAME=sciper>"><TMPL_VAR NAME=sciper></a></td>
+				<td><TMPL_VAR NAME=name> &nbsp; <TMPL_VAR NAME=firstname></td>			
+				<td><TMPL_VAR NAME=email></td>			
+			</tr>
+		</TMPL_LOOP>
+		</table>
+	</TMPL_IF>
+
+</div>
+
+
+
+<TMPL_INCLUDE NAME=footer.tmpl>

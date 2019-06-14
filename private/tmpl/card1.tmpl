@@ -1,0 +1,118 @@
+<TMPL_INCLUDE NAME=header.tmpl>
+
+<form name="card" method="post" action="/step2">
+	<input name="resp"  		 type="hidden" value="<TMPL_VAR NAME=resp>">
+  <input name="scipertodo" type="hidden" value="<TMPL_VAR NAME=scipertodo>">
+  <input name="nocmd" 		 type="hidden" value="<TMPL_VAR NAME=nocmd>">
+  <input name="etat" 			 type="hidden" value="<TMPL_VAR NAME=etat>">
+
+	<br>
+	<table border=0 width='99%'>
+	 <tr><td width="20%">commande no: </td><td><TMPL_VAR NAME=nocmd> </td></tr>
+	 <tr><td>enregistrée le:</td><td><TMPL_VAR NAME=date></td></tr>
+	 <tr><td>état: </td><td><TMPL_VAR NAME=etat></td></tr>
+	 <tr><td>opérateur:</td><td><TMPL_VAR NAME=operator></td></tr>
+	 <tr><td>remarques:</td><td><TMPL_VAR NAME=obs_repro></td></tr>
+	</table>
+	<TMPL_VAR NAME=quantite_label>: </td>
+	<select name=quantite>
+	<option value='50' >50</option>
+	<option value='100' >100</option>
+	<option value='200' >200</option>
+	<option value='300' >300</option>
+	</select> pcs (<i><TMPL_VAR NAME=prix>: 50 pc Frs 15.-, 100 pc Frs 25.-, 200 pc Frs 30.-, 300 pc Frs 35.-</i>)
+	<hr>
+	
+		<table width="99%" border="0" class=gray_bg>
+	 <tr>
+		<td width="30%" valign="top"><span class="blue bold">1</span> <b><TMPL_VAR NAME=card1_path></b>:</td>
+		<td>
+			<input id="path1" type="text" name="path1"  value="<TMPL_VAR NAME=path1>" size=48 <TMPL_VAR NAME=path1_alert>> 
+			<a href="#"> <img id="path1_img" src="../images/eye.png" style="height: 20px;" onclick="toggleVis('path1')"></a>
+			<input type="hidden" id="path1_show" name="path1_show"  value="">
+	
+			<a href=# OnClick="window.open('popup.asp?cmd_sciper=256443','cvis-affect','width=640,height=480')">autres...</a>
+		
+			<br>
+			<input id="path2" type="text" name="path2"  value="<TMPL_VAR NAME=path2>" size=48 <TMPL_VAR NAME=path2_alert>> 
+			<a href="#"> <img id="path2_img" src="../images/eye.png" style="height: 20px;" onclick="toggleVis('path2')"></a>
+			<input type="hidden" id="path2_show" name="path2_show"  value="">
+
+			<br>
+			<input id="path3" type="text" name="path3"  value="<TMPL_VAR NAME=path3>" size=48 <TMPL_VAR NAME=path3_alert>> 
+			<a href="#"> <img id="path3_img" src="../images/eye.png" style="height: 20px;" onclick="toggleVis('path3')" ></a>
+			<input type="hidden" id="path3_show" name="path3_show"  value="">
+			
+			<br>
+			<input id="path4" type="text" name="path4"  value="<TMPL_VAR NAME=path4>" size=48 <TMPL_VAR NAME=path4_alert>> 
+
+		</td>
+	 </tr>
+	<tr>
+		<td><span class='blue bold'>2</span> <TMPL_VAR NAME=card1_title> </td>
+		<td><input id=titre name=titre value="" size=48 ></td>
+	<tr>
+		<td><b><TMPL_VAR NAME=card1_firstname></b> </td>
+		<td><input id=pnom name=firstname value="<TMPL_VAR NAME=firstname>"" size=48 ></td>
+	<tr>
+		<td><b><TMPL_VAR NAME=card1_name></b> </td>
+		<td><input id=nom name=name value="<TMPL_VAR NAME=name>" size=48 ></td>
+	<tr>
+		<td><TMPL_VAR NAME=card1_function> </td>
+		<td><input id=fonc1 name=fonction1 value="<TMPL_VAR NAME=fonction1>" size=48 ></td>
+	<tr>
+		<td> </td>
+		<td><input id=fonc2 name=fonction2 value="<TMPL_VAR NAME=fonction2>" size=48 ></td>
+	<tr>
+		<td><span class='blue bold'>3</span> <TMPL_VAR NAME=card1_phone> </td>
+		<td><input id=tel name=phone1 value="<TMPL_VAR NAME=phone1>" size=48 ></td>
+	<tr>
+		<td> </td>
+		<td><input id=mobile name=phone2 value="<TMPL_VAR NAME=phone2>" size=48 ></td>
+	<tr>
+		<td>Mail </td>
+		<td><input id=mail name=mail value="<TMPL_VAR NAME=mail>" size=48 ></td>
+	</table>
+		
+	<div class="bold" style="margin-top: 15px;"><span class='blue'>4</span> <TMPL_VAR NAME=card1_type></div>
+	<div style="width: 30%; float: left;">
+		<select name="card_type" onchange="toggleTypeCV(this.options[this.selectedIndex].value, '<TMPL_VAR NAME=mailid>');">
+		<option value="adresse" selected>Adresse EPFL</option>
+		<option value="people" >Page people</option>
+		<option value="web" >Site web personnel</option>
+		</select>
+	</div>
+
+	<div id="display_adresse" style="display: block; width: 70%; float: left;">
+		<input id="adresse" name="adresse" value="<TMPL_VAR NAME=adresse>" size="42" <TMPL_VAR NAME=adresse_alert>>
+	</div>
+
+	<div id="display_people" style="display: none; width: 70%; float: left;">
+		people.epfl.ch/<TMPL_VAR NAME=mailid>
+	</div>
+		
+	<div id="display_web" style="display: none; width: 70%; float: left;">
+	  <input name="web" value="<TMPL_VAR NAME=web>"  size="48">
+	</div>
+	<br>
+	<div style="margin-top: 20px;">
+	<p><b>Remarques :</b> (max 255 car) <br>
+	<br><textarea name=comments rows=3 cols=64></textarea>
+	<hr>
+	<button name="delete" class="bigger bold" onclick="
+		if (confirm (<TMPL_VAR NAME=delete>)) {
+			location.href='/del?nocmd=<TMPL_VAR NAME=nocmd>';
+			return false;
+		} else {
+		 return false;
+	  }"><TMPL_VAR NAME=delete_label></button>
+	<button name="submit" class="bigger bold">Visualiser</button>
+	</div>
+
+
+</form>
+	
+  
+	
+<TMPL_INCLUDE NAME=footer.tmpl>
+
