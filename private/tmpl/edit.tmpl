@@ -41,6 +41,12 @@
 		<a href="/edit?nocmd=<TMPL_VAR NAME=nocmd>&scipertodo=<TMPL_VAR NAME=scipertodo>&card_lang=en"><img src="/images/en.png" style="height: 25px;"></a>
 		</h4>
 		<TMPL_VAR NAME=card_lang_note2>
+		<br>
+		<span style="margin-top: 10px;">
+			<TMPL_IF NAME=browser_FR><a href="/docs/CV-fr.pdf" target="_blank" class="red bold">Read first: Corporate Identity Recommandations</a>
+			<TMPL_ELSE><a href="/docs/CV-en.pdf" target="_blank" class="red bold">Important à lire : Recommandations Identité visuelle EPFL à suivre</a>
+			</TMPL_IF>
+		</span>
 		</div>
 	</TMPL_IF>
 
@@ -100,60 +106,64 @@
 	
 	<table width="99%" border="0" class=gray_bg>
 	 <tr>
-		<td width="30%" valign="top"><span class="blue bold">1</span> <b><TMPL_VAR NAME=label_path></b>:</td>
+		<td width="30%" valign="top"> <TMPL_VAR NAME=label_path1></td>
 		<td>
-			<input id="path1" type="text" name="path1"  value="<TMPL_VAR NAME=path1>" size=48 <TMPL_VAR NAME=path1_alert> onclick="setBGColor('path1', '#ffffff');"> 
+			<input id="path1" type="text" name="path1"  value="<TMPL_VAR NAME=path1>" size=52 <TMPL_VAR NAME=path1_alert> onclick="setBGColor('path1', '#ffffff');"> 
 <!-- 
 			<a href="#"> <img id="path1_img" src="<TMPL_VAR NAME=path1_img>" style="height: 20px;" onclick="toggleVis('path1')"></a>
  -->
 			<input type="hidden" id="path1_hide" name="path1_hide"  value="<TMPL_VAR NAME=path1_hide>">
 		
 			<br>
-			<input id="path2" type="text" name="path2"  value="<TMPL_VAR NAME=path2>" size=48 <TMPL_VAR NAME=path2_alert> onclick="setBGColor('path2', '#ffffff');"> 
+			<input id="path2" type="text" name="path2"  value="<TMPL_VAR NAME=path2>" size=52 <TMPL_VAR NAME=path2_alert> onclick="setBGColor('path2', '#ffffff');"> 
 <!-- 
 			<a href="#"> <img id="path2_img" src="<TMPL_VAR NAME=path2_img>" style="height: 20px;" onclick="toggleVis('path2')"></a>
  -->
 			<input type="hidden" id="path2_hide" name="path2_hide"  value="<TMPL_VAR NAME=path2_hide>">
 
-			<br>
-			<input id="path3" type="text" name="path3"  value="<TMPL_VAR NAME=path3>" size=48 <TMPL_VAR NAME=path3_alert> onclick="setBGColor('path3', '#ffffff');"> 
+		</td>
+		</tr>
+		<tr>
+		<td width="30%" valign="top"> <TMPL_VAR NAME=label_path2></td>
+		<td>
+			<input id="path3" type="text" name="path3"  value="<TMPL_VAR NAME=path3>" size=52 <TMPL_VAR NAME=path3_alert> onclick="setBGColor('path3', '#ffffff');"> 
 <!-- 
 			<a href="#"> <img id="path3_img" src="<TMPL_VAR NAME=path3_img>" style="height: 20px;" onclick="togglePathShow('path3')" ></a>
  -->
 			<input type="hidden" id="path3_hide" name="path3_hide"  value="<TMPL_VAR NAME=path3_hide>">
 			
 			<br>
-			<input id="path4" type="text" name="path4"  value="<TMPL_VAR NAME=path4>" size=48 <TMPL_VAR NAME=path4_alert> onclick="setBGColor('path4', '#ffffff');"> 
+			<input id="path4" type="text" name="path4"  value="<TMPL_VAR NAME=path4>" size=52 <TMPL_VAR NAME=path4_alert> onclick="setBGColor('path4', '#ffffff');"> 
 
 		</td>
 	 </tr>
 	<tr>
-		<td><span class='blue bold'>2</span> <TMPL_VAR NAME=label_title> </td>
-		<td><input id=titre name=titre value="" size=48  <TMPL_VAR NAME=titre_alert>  onclick="setBGColor('titre', '#ffffff');"></td>
+		<td><TMPL_VAR NAME=label_title> </td>
+		<td><input id=title name=title value="<TMPL_VAR NAME=title>" size=52  <TMPL_VAR NAME=title_alert>  onclick="setBGColor('title', '#ffffff');"></td>
 	<tr>
 		<td><b><TMPL_VAR NAME=label_firstname></b> </td>
-		<td><input id=pnom name=firstname value="<TMPL_VAR NAME=firstname>"" size=48 <TMPL_VAR NAME=firstname_alert> onclick="setBGColor('pnom', '#ffffff');"></td>
+		<td><input id=pnom name=firstname value="<TMPL_VAR NAME=firstname>"" size=52 <TMPL_VAR NAME=firstname_alert> onclick="setBGColor('pnom', '#ffffff');"></td>
 	<tr>
 		<td><b><TMPL_VAR NAME=label_name></b> </td>
-		<td><input id=nom name=name value="<TMPL_VAR NAME=name>" size=48 <TMPL_VAR NAME=name_alert>  onclick="setBGColor('nom', '#ffffff');"></td>
+		<td><input id=nom name=name value="<TMPL_VAR NAME=name>" size=52 <TMPL_VAR NAME=name_alert>  onclick="setBGColor('nom', '#ffffff');"></td>
 	<tr>
 		<td><TMPL_VAR NAME=label_function> </td>
-		<td><input id=fonc1 name=fonction1 value="<TMPL_VAR NAME=fonction1>" size=48 <TMPL_VAR NAME=fonction1_alert>  onclick="setBGColor('fonc1', '#ffffff');"></td>
+		<td><input id=fonc1 name=fonction1 value="<TMPL_VAR NAME=fonction1>" size=52 <TMPL_VAR NAME=fonction1_alert>  onclick="setBGColor('fonc1', '#ffffff');"></td>
 	<tr>
 		<td> </td>
-		<td><input id=fonc2 name=fonction2 value="<TMPL_VAR NAME=fonction2>" size=48 <TMPL_VAR NAME=fonction2_alert>   onclick="setBGColor('fonc2', '#ffffff');"></td>
+		<td><input id=fonc2 name=fonction2 value="<TMPL_VAR NAME=fonction2>" size=52 <TMPL_VAR NAME=fonction2_alert>   onclick="setBGColor('fonc2', '#ffffff');"></td>
 	<tr>
-		<td><span class='blue bold'>3</span> <TMPL_VAR NAME=label_phone> </td>
-		<td><input id=tel name=phone1 value="<TMPL_VAR NAME=phone1>" size=48 <TMPL_VAR NAME=phone1_alert> onclick="setBGColor('tel', '#ffffff');"></td>
+		<td><TMPL_VAR NAME=label_phone> </td>
+		<td><input id=tel name=phone1 value="<TMPL_VAR NAME=phone1>" size=52 <TMPL_VAR NAME=phone1_alert> onclick="setBGColor('tel', '#ffffff');"></td>
 	<tr>
 		<td> </td>
-		<td><input id=mobile name=phone2 value="<TMPL_VAR NAME=phone2>" size=48 <TMPL_VAR NAME=phone2_alert>  onclick="setBGColor('mobile', '#ffffff');"></td>
+		<td><input id=mobile name=phone2 value="<TMPL_VAR NAME=phone2>" size=52 <TMPL_VAR NAME=phone2_alert>  onclick="setBGColor('mobile', '#ffffff');"></td>
 	<tr>
 		<td>Mail </td>
-		<td><input id=email name=email value="<TMPL_VAR NAME=email>" size=48 <TMPL_VAR NAME=femail_alert>  onclick="setBGColor('email', '#ffffff');"></td>
+		<td><input id=email name=email value="<TMPL_VAR NAME=email>" size=52 <TMPL_VAR NAME=femail_alert>  onclick="setBGColor('email', '#ffffff');"></td>
 	</table>
 		
-	<div class="bold" style="margin-top: 15px;"><span class='blue'>4</span> <TMPL_VAR NAME=label_type></div>
+	<div class="bold" style="margin-top: 15px;"><TMPL_VAR NAME=label_type></div>
 	<div style="width: 30%; float: left;">
 		<select name="card_type" onchange="toggleTypeCV(this.options[this.selectedIndex].value, '<TMPL_VAR NAME=mailid>');">
 		<option value="adresse" <TMPL_VAR NAME=card_type_adresse>>Adresse EPFL</option>
@@ -163,13 +173,16 @@
 	</div>
 
 	<div id="display_adresse" style="display: <TMPL_IF NAME=card_type_adresse>block;<TMPL_ELSE>none;</TMPL_IF> width: 70%; float: left;">
+<!-- 
 		<input id="adresse" name="adresse" value="<TMPL_VAR NAME=adresse>" size="42" <TMPL_VAR NAME=adresse_alert>  onclick="setBGColor('adresse', '#ffffff');">
+ -->
+		<textarea id="adresse" cols="40" rows="2" name="adresse"<TMPL_VAR NAME=adresse_alert> style="resize: vertical; margin-top: -10px;"><TMPL_VAR NAME=adresse></textarea>
 	</div>
 	<div id="display_people" style="display: <TMPL_IF NAME=card_type_people>block;<TMPL_ELSE>none;</TMPL_IF> width: 70%; float: left;">
 		people.epfl.ch/<TMPL_VAR NAME=mailid>
 	</div>
 	<div id="display_web" style="display: <TMPL_IF NAME=card_type_webe>block;<TMPL_ELSE>none;</TMPL_IF> width: 70%; float: left;">
-	  <input name="web" value="<TMPL_VAR NAME=web>"  size="48" <TMPL_VAR NAME=web_alert>  onclick="setBGColor('display_web', '#ffffff');">
+	  <input name="web" value="<TMPL_VAR NAME=web>"  size="52" <TMPL_VAR NAME=web_alert>  onclick="setBGColor('display_web', '#ffffff');">
 	</div>
 	
 	<br>

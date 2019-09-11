@@ -5,7 +5,7 @@
 	<TMPL_IF NAME=cards_loop>
 		<form name="form" action="/donem">
 		<div class="bigger bold" style="padding-bottom: 20px;">
-			<TMPL_VAR NAME=orders_label>
+			<TMPL_VAR NAME=orders_label> <TMPL_VAR NAME=status>
 		</div>
 
 		<TMPL_IF NAME=status_processing>
@@ -22,7 +22,9 @@
 			<td class="gray_bg">Admin</td>
 			<td class="gray_bg"><TMPL_VAR NAME=label_name> <TMPL_VAR NAME=label_firstname></td>
 			<td class="gray_bg"><TMPL_VAR NAME=quantite_label></td>
-			<td class="gray_bg"><TMPL_VAR NAME=label_status></td>
+				<TMPL_UNLESS NAME=status>
+				<td class="gray_bg"><TMPL_VAR NAME=label_status></td>
+				</TMPL_UNLESS>
 		</tr>
 		<TMPL_LOOP NAME=cards_loop>
 			<TMPL_IF NAME=action>
@@ -34,10 +36,16 @@
 					<a href="/<TMPL_VAR NAME=action>?nocmd=<TMPL_VAR NAME=nocmd>"><TMPL_VAR NAME=nocmd></a>
 				</td>
 				<td><TMPL_VAR NAME=date></td>
-				<td><TMPL_VAR NAME=respname> <TMPL_VAR NAME=respfirstname></td>
+				<td>
+					<TMPL_IF NAME=respname><TMPL_VAR NAME=respname> <TMPL_VAR NAME=respfirstname>
+					<TMPL_ELSE><TMPL_VAR NAME=resp>
+					</TMPL_IF>
+				</td>
 				<td><TMPL_VAR NAME=name> <TMPL_VAR NAME=firstname></td>
 				<td><TMPL_VAR NAME=quantite></td>			
+				<TMPL_UNLESS NAME=status>
 				<td><TMPL_VAR NAME=status></td>			
+				</TMPL_UNLESS>
 			</tr>
 			</TMPL_IF>
 		</TMPL_LOOP>

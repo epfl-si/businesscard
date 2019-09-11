@@ -33,7 +33,9 @@ require 'tmpl_labels.inc';
 	my $mailRepro		= 'carinne.christinaz@epfl.ch';
 
 	my $verbose			= 0;
-
+#	my $repro_staff = '104782,126981';
+#	my $mailRepro		= 'ion.cionca@epfl.ch,carinne.christinaz@epfl.ch';
+ 
 	my $cards_status = {
 		'1'	=> {
 			fr => qq{saisie},
@@ -63,32 +65,8 @@ require 'tmpl_labels.inc';
 		'300',	'35.-',
 	);
 
-my $FACULTES = {
-	ENAC => {
-		fr	=> [ qq{Faculté de l'environnement naturel,}, qq{architectural et construit}, ],
-		en	=> [ qq{School of Architecture, Civil and}, qq{Environmental Engineering}, ],
-	}, 
-	STI => {
-		fr	=> [ qq{Faculté des sciences et techniques}, qq{de l'ingénieur}, ],
-		en	=> [ qq{School of Engineering}, ],
-	}, 
-	SB => {
-		fr	=> [ qq{Faculté des sciences de base}, ],
-		en	=> [ qq{School of Basic Sciences}, ],
-	}, 
-	SV => {
-		fr	=> [ qq{Faculté des sciences de la vie}, ],
-		en	=> [ qq{School of Life Sciences}, ],
-	}, 
-	IC => {
-		fr	=> [ qq{Faculté informatique et communications}, ],
-		en	=> [ qq{School of Computer and Communication}, qq{Sciences}, ],
-	}, 
-};
-
-	my $MAX_SIZE 			= 60;
+	my $MAX_SIZE 			= 40;
 	my $MAX_SIZE_ADDR	= 43;
-	my $MAX_SIZE_ADDR	= 80;
 	
 	my $tmpldir				= '/var/www/vhosts/businesscard.epfl.ch/private/tmpl';
 	my $DEBUG 	  		= -f '/opt/dinfo/etc/MASTER' ? 0 : 1;
@@ -126,6 +104,8 @@ my $FACULTES = {
 	} else {
 #		$args->{scipertodo} = $login->{sciper};
 	}
+
+#	error ('no_access') unless $ENV{REMOTE_ADDR} eq '128.178.1.146';
 	
 	if ($ENV{PATH_INFO} =~ /^\/edit$/)			{	edit (); }
 	if ($ENV{PATH_INFO} =~ /^\/show$/)			{	show (); }
@@ -137,7 +117,6 @@ my $FACULTES = {
 	if ($ENV{PATH_INFO} =~ /^\/archive$/)		{	archive (); }
 	if ($ENV{PATH_INFO} =~ /^\/delcmd$/)		{	delcmd (); }
 	if ($ENV{PATH_INFO} =~ /^\/list$/) 			{	list (); }
-	if ($ENV{PATH_INFO} =~ /^\/copy$/) 			{	copy (); }
 	
 	main ();
 
@@ -495,7 +474,8 @@ English below
 	$msg 			=~ s/XXX/$cmd->{firstname} $cmd->{name}/g;
 	my $dest 	= $cmd->{mail};	
 	#	- notify admin
-	$dest 	 .= ','.$cmd->{respemail} if $cmd->{respemail};
+	my @resps = getPersons ($cmd->{resp}, 'resp');
+	$dest 	 .= ','.$resps[0]->{email} if $resps[0]->{email};
 
 	my $subj = qq{Repro : votre commade de cartes de visite $cmd->{nocmd} - $cmd->{firstname} $cmd->{name}};
 	mailto ($dest, $subj, $msg, $cmd);
@@ -511,40 +491,6 @@ English below
 	$template->param(show_submit_note			=> $tmpl_labels->{repro_done_note}->{$lang} );
 	$template->param(submit_button_label	=> $tmpl_labels->{repro_done}->{$lang} );
 	$template->param(repro_action					=> 'done' );
-
-	print "Content-Type: text/html; charset=utf-8\n\n";
-	print $template->output;
-	exit;
-	
-}
-
-
-#	-------------
-sub copy {
-	
-	my $cmd = getCmd($args->{nocmd});
-		 $cmd->{nocmd} 	= '';
-		 $cmd->{fond} 	= '';
-		 $cmd->{date}  	= sprintf "%04d-%02d-%02d %02d:%02d:%02d", $year, $mon, $mday, $hour, $mon, $sec;
-		 $cmd->{done_by}= $login->{sciper};
-		 $cmd->{etat} 	= '1';
-	my @persons 			= getPersons ($cmd->{scipertodo});
-	my $person 				= $persons[0];
-	my $template 		 	= initTempl ('edit.tmpl', $cmd);
-
-	my @accreds_loop;
-	map {
-		$person->{accreds}->{$_}->{scipertodo} = $cmd->{scipertodo};
-		$person->{accreds}->{$_}->{nocmd} 		 = $cmd->{nocmd};
-		$person->{accreds}->{$_}->{unitid} 		 = $_;
-		$person->{accreds}->{$_}->{card_lang}  = $card_lang;
-		push @accreds_loop, $person->{accreds}->{$_};
-	} sort { $person->{accreds}->{$a}->{ordre} <=> $person->{accreds}->{$b}->{ordre} } keys %{$person->{accreds}};
-	$template->param(accreds_loop	=> \@accreds_loop );
-
-	$template->param(card_type_adresse	=> 'selected' ) if $cmd->{card_type} eq 'adresse';
-	$template->param(card_type_people		=> 'selected' ) if $cmd->{card_type} eq 'people';
-	$template->param(card_type_web			=> 'selected' ) if $cmd->{card_type} eq 'web';
 
 	print "Content-Type: text/html; charset=utf-8\n\n";
 	print $template->output;
@@ -595,8 +541,7 @@ sub list {
 		} 
 	} @cards_loop;
 	my $template 	 = initTempl ('list.tmpl');
-	$template->param(status							=> $cards_status->{$args->{etat}}->{$lang}) if $args->{etat};
-	$template->param(cards_loop					=> \@cards_loop);
+	$template->param(cards_loop	=> \@cards_loop);
 	$template->param(status_processing	=> 1) if $args->{etat} eq '3';
 	
 	print "Content-Type: text/html; charset=utf-8\n\n";
@@ -634,7 +579,8 @@ warn "-->del : $args->{nocmd}\n" if  $verbose;
 <br>
 		};
 		my $dest = $cmd->{mail};	
-	$dest 	 .= ','.$cmd->{respemail} if $cmd->{respemail};
+		my @resps = getPersons ($cmd->{resp}, 'resp');
+		$dest 	 .= ','.$resps[0]->{email} if $resps[0]->{email};
 
 		my $subj = qq{Repro : commande de cartes de visite annulée $cmd->{nocmd} - $cmd->{firstname} $cmd->{name}};
 		mailto ($dest, $subj, $msg);
@@ -664,12 +610,15 @@ sub mailto {
   my $subject = encode_mimeword($subj);
   my $replyTo = 'noreply@epfl.ch';
   my $mailFrom= 'noreply@epfl.ch';
-#  my $mailCc	= 'ion.cionca@epfl.ch';
- 
+  my $mailCc	= 'ion.cionca@epfl.ch';
+  
+	# utf8::encode ($msg);
+	# utf8::encode ($subject);
+
   eval {
   	open (MAIL, "| $sendmail -t -F$mailFrom -f$mailFrom") or return;
   	print MAIL qq{To: $dest\n};
-#  	print MAIL qq{Cc: $mailCc\n};
+  	print MAIL qq{Cc: $mailCc\n};
   	print MAIL qq{From: $mailFrom\n};
   	print MAIL qq{Reply-to: $replyTo
 Subject: $subject
@@ -717,7 +666,7 @@ sub updateCmd {
 #warn "--> updateCmd cmd\n".Dumper($cmd) if  $verbose;	
 	my ($sql, @params, $nocmd);
 	foreach my $field (keys %$cmd) {
-		next if $field =~ /^(nocmd|respname|respfirstname|respemail)$/;
+		next if $field eq 'nocmd';
 		$sql .= qq{$field=?, };
 		push @params, $cmd->{$field};
 	}
@@ -763,21 +712,24 @@ sub getAllCmdsByStatus {
 #--------
 sub getCmdsByStatus {
 	my $etat = shift;
-#warn "--> getCmdsByStatus : $etat\n" ;
+warn "--> getCmdsByStatus : $etat\n" if $verbose;
 
 	my $sql = qq{select * from cmds };
 		 $sql .= qq{ where etat=? } if ($etat) ;
 	my @params = ($etat) if ($etat) ;
 		 $sql .= qq{order by date desc};
 	my $sth = $dbcards->query($sql, @params);
-	my @cmds; my $resps_scipers;
+	my @cmds;
 	while (my $cmd = $sth->fetchrow_hashref) {
 		next unless canManage ($cmd->{scipertodo});
-		$cmd->{status} 								= $cards_status->{$cmd->{etat}}->{$lang};
-		$resps_scipers->{$cmd->{resp}}= 1;
+warn "--> getCmdsByStatus : cmd\n".Dumper($cmd) if $verbose;
+
+		my @resps = getPersons ($cmd->{resp}, 'resp');
+		$cmd->{respname} 			= $resps[0]->{name};
+		$cmd->{respfirstname} = $resps[0]->{firstname};
+		$cmd->{status} 				= $cards_status->{$cmd->{etat}}->{$lang};
 		push @cmds, $cmd;
 	}
-	@cmds = addRespData (@cmds) if $etat;
 	return @cmds;
 }
 
@@ -785,19 +737,21 @@ sub getCmdsByStatus {
 sub getCmdsBySciper {
 	my $scipertodo = shift;
 	return unless $scipertodo;
-#warn "--> getCmdsBySciper : $scipertodo\n" if $verbose;
+warn "--> getCmdsBySciper : $scipertodo\n" if $verbose;
 	my $sql = qq{select * from cmds where scipertodo=? order by date desc};
 	my $sth = $dbcards->query($sql, $scipertodo);
-	my @cmds; my $resps_scipers;
+	my @cmds;
 	while (my $cmd = $sth->fetchrow_hashref) {
 		next unless canManage ($cmd->{scipertodo});
-		$cmd->{status} 								= $cards_status->{$cmd->{etat}}->{$lang};
-		$resps_scipers->{$cmd->{resp}}= 1;
+
+		my @resps = getPersons ($cmd->{resp}, 'resp');
+		$cmd->{respname} 			= $resps[0]->{name};
+		$cmd->{respfirstname} = $resps[0]->{firstname};
+		$cmd->{status} = $cards_status->{$cmd->{etat}}->{$lang};
 		push @cmds, $cmd;
 	}
-	@cmds = addRespData (@cmds);
+#warn "--> getCmdsByStatusB : cmds\n".Dumper(@cmds);	
 	return @cmds;
-
 }
 
 #--------
@@ -814,9 +768,8 @@ sub getCmd {
 	}
 
 	error ("cmd_not_found") unless defined $cmd->{nocmd};
-	my @cmds = addRespData ($cmd);
-	return $cmds[0];
-
+#	map { utf8::encode ($cmd->{$_}) } keys %$cmd;
+	return $cmd;
 }
 
 #--------
@@ -844,7 +797,6 @@ sub makeCardFromDinfo {
 		path1			=> $accred->{path1},
 		path2			=> $accred->{path2},
 		path3			=> $accred->{path3},
-		path4			=> $accred->{path4},
 		fonction1	=> $accred->{fonction},
 		name			=> $person->{name},
 		firstname	=> $person->{firstname},
@@ -975,7 +927,7 @@ warn "--> initTempl : D\n" if $verbose;
 	my $line4	= $cmd->{card_type} eq 'adresse'
 						? $cmd->{adresse} 
 						: $cmd->{card_type} eq 'people'
-							? 'people.epfl.ch/'.$mailid
+							? 'https://people.epfl.ch/'.$mailid
 							: $cmd->{card_type} eq 'web'
 								? $cmd->{web}
 								: '';
@@ -1018,7 +970,6 @@ warn "--> initTempl : D\n" if $verbose;
 	$template->param(quant_loop				=> \@quant_loop ) ;
 	$template->param(prices_list			=> $prices_list ) ;
 
-	setTmplParam ($template, 'title',			$cmd->{title});
 	setTmplParam ($template, 'name', 			$cmd->{name});
 	setTmplParam ($template, 'firstname', $cmd->{firstname});
 	setTmplParam ($template, 'path1', 		$cmd->{path1});
@@ -1030,14 +981,9 @@ warn "--> initTempl : D\n" if $verbose;
 	setTmplParam ($template, 'phone1', 		$cmd->{phone1});
 	setTmplParam ($template, 'phone2', 		$cmd->{phone2});
 	setTmplParam ($template, 'email', 		$cmd->{email});
-	
-#	setTmplParam ($template, 'adresse', 	$cmd->{adresse});
-	$template->param(adresse							=> $cmd->{adresse} );
-	
+	setTmplParam ($template, 'adresse', 	$cmd->{adresse});
 	setTmplParam ($template, 'web', 			$cmd->{web});
-#	setTmplParam ($template, 'line4', 		$line4);
-	$line4 =~ s/\r/<br>/ if $cmd->{card_type} eq 'adresse';
-	$template->param(line4							=> $line4 );
+	setTmplParam ($template, 'line4', 		$line4);
 
 	$template->param(show_alert			=> $show_alert ) ;
 
@@ -1244,19 +1190,19 @@ sub authenticate {
 	# utf8::encode ($login->{name});
 	# utf8::encode ($login->{firstname});
 
-# 	my $has_statut_perso;
-# 	map { 
-# 		$has_statut_perso = 1 if ($_->{statusid} eq '1' );
-# 	} $Accreds->getAccreds ($login->{sciper});
-# 	error ('no_access') unless $has_statut_perso;
-warn "--> authenticate : $login->{sciper}, $login->{name}, $login->{firstname}\n"; 
+	my $has_statut_perso;
+	map { 
+		$has_statut_perso = 1 if ($_->{statusid} eq '1' );
+	} $Accreds->getAccreds ($login->{sciper});
+	error ('no_access') unless $has_statut_perso;
+warn "--> authenticate : $login->{name}, $login->{firstname}\n" if  $verbose; 
   
   $adminUnits = $Accreds->getAllUnitsWhereHasRight($login->{sciper}, 'cartevisite');
   error ('no_access') if !$adminUnits;
 	map { delete $adminUnits->{$_} if $adminUnits->{$_} =~ /n/g; } keys %$adminUnits;
-#warn "--> auth adminUnits\n".Dumper($adminUnits) if  $verbose;
+warn "--> auth adminUnits\n".Dumper($adminUnits) if  $verbose;
 	$usersToManage = getPersonsFromUnits(keys %$adminUnits );
-#warn "--> auth usersToManage\n".Dumper($usersToManage) if  $verbose;
+warn "--> auth usersToManage\n".Dumper($usersToManage) if  $verbose;
 	error ('no_users') unless $usersToManage;
 	$adminFonds 	 = getFondsForUnits();
 #warn "--> auth adminFonds\n".Dumper($adminFonds);
@@ -1360,7 +1306,7 @@ sub getFondsForUnits {
 			cf 			=> $data->{cf},
 		};
 	}
-#warn "--> getFondsForUnits fonds\n".Dumper($fonds) if $verbose;
+warn "--> getFondsForUnits fonds\n".Dumper($fonds) if $verbose;
 	return $fonds;
 	
 }
@@ -1368,6 +1314,7 @@ sub getFondsForUnits {
 #--------
 sub getPersons {
 	my $key 		= shift;
+	my $resp 		= shift;
 warn "--> getPersons : key=$key\n" if $verbose;
 	return unless $key;
 
@@ -1383,8 +1330,10 @@ warn "--> getPersons : key=$key\n" if $verbose;
 			 dinfo.sciper.sexe         as sex,
 			 dinfo.emails.addrlog      as email
 		from dinfo.sciper
+		left join dinfo.accounts	on dinfo.sciper.sciper = dinfo.accounts.sciper
 		left join dinfo.emails	on dinfo.sciper.sciper = dinfo.emails.sciper
-		where dinfo.sciper.sciper = ?
+		where accounts.user is not null
+			and dinfo.sciper.sciper = ?
 		};
 		$sth = $dinfodb->query ($sql, $key);
 
@@ -1399,8 +1348,12 @@ warn "--> getPersons : key=$key\n" if $verbose;
 			 dinfo.sciper.sexe         as sex,
 			 dinfo.emails.addrlog      as email
 		from dinfo.sciper
+		left join dinfo.accounts	on dinfo.sciper.sciper = dinfo.accounts.sciper
 		left join dinfo.emails		on dinfo.sciper.sciper = dinfo.emails.sciper
-		where ( dinfo.sciper.nom_acc like ? or dinfo.sciper.nom_usuel like ? )
+		where accounts.user is not null
+			 and ( 	 dinfo.sciper.nom_acc like ? 
+			 			or dinfo.sciper.nom_usuel like ? 
+					 )
 		order by name, firstname
 		};
 		$sth = $dinfodb->query ($sql, $key.'%', $key.'%');
@@ -1408,7 +1361,12 @@ warn "--> getPersons : key=$key\n" if $verbose;
 
 	my @persons;
 	while (my $data = $sth->fetchrow_hashref) {
+		unless ($resp) {
 			next unless canManage ($data->{sciper}) ;
+		}
+ 		# utf8::encode ($data->{name});
+ 		# utf8::encode ($data->{firstname});
+
 		push @persons, $data;
 	}
 	error('person_not_found') unless scalar @persons;
@@ -1449,7 +1407,6 @@ warn "--> getPersons : key=$key\n" if $verbose;
     select accred.accreds.unitid  as unitid,
 				accred.accreds.ordre     	as ordre,
 				accred.accreds.statusid  	as status,
-				path1.hierarchie					as hierarchie,
 				accred.positions.labelfr  as fonctionfr,
 				accred.positions.labelxx  as fonctionxx,
 				accred.positions.labelen  as fonctionen,
@@ -1479,41 +1436,24 @@ warn "--> getPersons : key=$key\n" if $verbose;
 			status	=> $data->{status},
 			bottin	=> $bottin->{$data->{unitid}},
 		};
-		
-		$accred->{hierarchie} = $data->{hierarchie};
-		$accred->{hierarchie} =~ s/^EPFL //;;
 
 		if ($card_lang eq 'fr') {
 			$accred->{path1} = $data->{libelle1fr};
 			$accred->{path2} = $data->{libelle2fr};
 			$accred->{path3} = $data->{libelle3fr};
-			$accred->{path4} = $data->{libelle3fr};
 			$accred->{fonction} = $person->{sex} eq 'F' 
 												 ? $data->{fonctionxx}
 													 ? $data->{fonctionxx}
 													 : $data->{fonctionfr}
 												 : $data->{fonctionfr};
-			$accred->{path1} = $data->{libelle1fr};
 		} else {
 			$accred->{path1} = $data->{libelle1en};
 			$accred->{path2} = $data->{libelle2en};
 			$accred->{path3} = $data->{libelle3en};
-			$accred->{path4} = $data->{libelle3en};
 			$accred->{fonction} = $data->{fonctionen}
 													 ? $data->{fonctionen}
 													 : $data->{fonctionfr};
 		}		
-warn "-->hierarchie=$accred->{hierarchie}, path4=$accred->{path4}\n";
-		if ( defined $FACULTES->{$accred->{hierarchie}} && scalar @{$FACULTES->{$accred->{hierarchie}}->{$card_lang}} > 1 ) {
-			$accred->{path1} = $FACULTES->{$accred->{hierarchie}}->{$card_lang}->[0];
-			$accred->{path2} = $FACULTES->{$accred->{hierarchie}}->{$card_lang}->[1];
-			$accred->{path3} = '';
-		} else {
-			$accred->{path4} = $accred->{path3};
-			$accred->{path3} = $accred->{path2};
-			$accred->{path2} = $accred->{path1};
-			$accred->{path1} = '';
-		}
 
 		# utf8::encode ($accred->{path1});
 		# utf8::encode ($accred->{path2});
@@ -1534,62 +1474,6 @@ warn "-->hierarchie=$accred->{hierarchie}, path4=$accred->{path4}\n";
 		accreds		=> $accreds,
 		} );
 
-}
-
-#--------
-sub addRespData {
-	my @cmds = @_;
-warn "--> addRespData\n" ;
-	my %resps_scipers = map {
-		$_->{resp} => 1
-	} @cmds;
-	my $resps = getMultiplePersons (join ',', keys %resps_scipers);
-	foreach my $cmd (@cmds) { 
-		if ($resps->{$cmd->{resp}}) {
-			$cmd->{respname} 			= $resps->{$cmd->{resp}}->{name};
-			$cmd->{respfirstname} = $resps->{$cmd->{resp}}->{firstname};
-			$cmd->{respemail} 		= $resps->{$cmd->{resp}}->{email};
-		}
-	}
-	return @cmds;
-}
-
-#--------
-sub getMultiplePersons {
-	my $scipers	= shift;
-		 $scipers =~ s/^,//;
-		 $scipers =~ s/,$//;
-	return unless $scipers;
-
-	my $sql = qq{
-		select 
-			 dinfo.sciper.sciper,
-			 dinfo.sciper.nom_acc  		 as name,
-			 dinfo.sciper.prenom_acc   as firstname,
-			 dinfo.sciper.nom_usuel    as nameus,
-			 dinfo.sciper.prenom_usuel as firstnameus,
-			 dinfo.emails.addrlog      as email
-		from dinfo.sciper
-		left join dinfo.emails	 on dinfo.sciper.sciper = dinfo.emails.sciper
-		where dinfo.sciper.sciper in ($scipers)
-	};
-	my $sth = $dinfodb->prepare($sql);
-	error ('db_error') unless $sth;
-	my $rv = $sth->execute();
-	error ('db_error') unless $rv;
-
-	my $persons;
-	while (my $person = $sth->fetchrow_hashref) {
-		next unless $person->{sciper};
-		$persons->{$person->{sciper}} = {
-			sciper		=> $person->{sciper},
-			name			=> $person->{name},
-			firstname	=> $person->{firstname},
-			sex				=> $person->{sex},
-			email			=> $person->{email},
-		};
-	}
-	return $persons;
 }
 
 #--------

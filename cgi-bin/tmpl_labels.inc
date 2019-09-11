@@ -155,9 +155,13 @@ $tmpl_labels = {
 		fr	=> qq{Fond},
 		en	=> qq{Fund},
 	},
-	label_path	=> {
-		fr	=> qq{Faculté/Institut/Service/Labo},
-		en	=> qq{Faculty/Institute/Service/Lab},
+	label_path1	=> {
+		fr	=> qq{<b>Faculté (2 lignes)</b>},
+		en	=> qq{<b>Faculty (2 lines)</b>},
+	},
+	label_path2	=> {
+		fr	=> qq{Institut, Labo ou Service},
+		en	=> qq{Institute, Lab or Service},
 	},
 	label_title	=> {
 		fr	=> qq{Titre universitaire},
@@ -186,6 +190,10 @@ $tmpl_labels = {
 	label_type	=> {
 		fr	=> qq{Type cartes de visite},
 		en	=> qq{Businesscard type},
+	},
+	label_select	=> {
+		fr	=> qq{choisir une personne},
+		en	=> qq{select a person},
 	},
 	main_note => {
 		fr	=> qq{<b>Attention :</b>
@@ -247,5 +255,8 @@ $tmpl_labels = {
 		fr => qq{Questions sur les délais/quantités},
 		en => qq{Questions about duration/quantities},
 	},
-	
+	repro_prix => {
+		fr => qq{Prix: 50 ex. CHF 15.-, 100 ex. CHF 25.-, 200 ex. CHF 30.-, 300 ex. CHF 35.-},
+		en => qq{Price: 50 pcs. CHF 15.-, 100 pcs. CHF 25.-, 200 pcs. CHF 30.-, 300 pcs. CHF 35.-},
+	},	
 };

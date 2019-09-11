@@ -81,13 +81,13 @@ console.log ('chkFields field=' + field.name + ', value=' + field.value);
 			return false;
 		}
 				
-		if (!field.name || field.name == 'fond' || field.type === 'submit' || field.type === 'button') continue;
+		if (!field.name || field.name == 'fond' || field.type === 'submit' || field.type === 'button'  || field.name === 'adresse') continue;
 		
 		var MAXSIZE;
 		if (field.name == 'adresse') {
-			MAXSIZE=43;
+			MAXSIZE=80;
 		} else {
-			MAXSIZE=40;
+			MAXSIZE=60;
 		}
 		
 		if (field.value.length > MAXSIZE) {
