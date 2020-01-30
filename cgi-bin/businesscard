@@ -15,6 +15,7 @@ use Data::Dumper;
 use Mail::Sendmail;
 use HTML::Template;
 use MIME::Words qw(:all);
+use URI;
 
 use Tequila::Client;
 use Cadi::CadiDB;
@@ -26,6 +27,7 @@ use Accred::Rights;
 use vars qw( $tequila $tmpl_labels $adminUnits $login $show_alert $adminFonds $usersToManage);
 require 'tmpl_labels.inc';	
 
+$ENV {SERVER_NAME} = $ENV {SITE_URL} if ($ENV {SERVER_NAME} eq '127.0.0.1' && $ENV {SITE_URL});
 	my $droitCVIS		= '11';
 	my $helpdesk		= '1234@epfl.ch';
 	my $repro_staff = '104782,147506,104732,126981,178145';
@@ -302,6 +304,8 @@ sub valid {
 
 #warn "--> valid args\n".Dumper($args);
 	my $cmd 		 = getCmd($args->{nocmd});
+	my $url = URI->new($ENV{HTTP_REFERER});
+	my $domain = $url->host;
 
 	error ('no_rights') unless canManage ($cmd->{scipertodo});
 	error ('no_fund') 	unless $cmd->{fond};
@@ -316,7 +320,7 @@ sub valid {
 	$msg = qq{
 Commande de cartes de visite<br>
 Bénéficiaire : $cmd->{firstname} $cmd->{name}<br>
-No. commande : <a href="https://$ENV{SERVER_NAME}/show?nocmd=$cmd->{nocmd}">$cmd->{nocmd}</a><br>
+No. commande : <a href="https://$domain/show?nocmd=$cmd->{nocmd}">$cmd->{nocmd}</a><br>
 Validée par : $login->{name} $login->{firstname} [$login->{sciper}]<br>
 	};
 	$subj = qq{Commande de cartes de visite : $cmd->{nocmd} - $cmd->{firstname} $cmd->{name}};
@@ -1216,7 +1220,7 @@ warn "--> error : msg=$msg\n";
 }
 
 #--------
-sub authenticate {
+sub authenticate
   unless ($tequila) {
 		$tequila = new Tequila::Client (
 			service    => 'Businesscards',
