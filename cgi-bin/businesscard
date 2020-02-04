@@ -1220,7 +1220,7 @@ warn "--> error : msg=$msg\n";
 }
 
 #--------
-sub authenticate
+sub authenticate {
   unless ($tequila) {
 		$tequila = new Tequila::Client (
 			service    => 'Businesscards',
