@@ -404,49 +404,42 @@ English below
 <br>Madame, Monsieur,
 <br>
 <br>Nous vous remercions pour votre commande.
-<br>
 <br>Les cartes de visites pour: XXX sont à votre disposition.
 <br>
 <br>Nous vous invitons à venir les retirer à notre guichet qui est ouvert du lundi au jeudi de 8h30 à 11h00 et de 13h30 à 16h00.
 <br>Le vendredi de 8h30 à 11h00 et de 13h30 à 15h00.
 <br>
 <br>Nous vous informons que les cartes de visite pour EPFL pour
-<br>
 <br>Neuchâtel sont envoyées à:
 <ul>
-<br>    EPFL STI IMT-GE
-<br>    Mme Joëlle Banjac
-<br>    Case podstale 526
-<br>    Rue de la Maladière 71b
+    EPFL IMT - Réception
+<br>    Maladière 71B
 <br>    2002 Neuchâtel
 </ul>
-<br>Sion sont envoyées à:
+Sion sont envoyées à:
 <ul>
-<br>    EPFL Valais
+    EPFL Valais
 <br>    Magasin ISIC / Mr Seydoux
 <br>    Rte de l'Industrie 17
 <br>    Case postale 440
 <br>    1950 Sion
 </ul>
-<br>Fribourg sont envoyées à:
+Fribourg sont envoyées à:
 <ul>
-<br>    EPFL Fribourg
+    EPFL Fribourg
 <br>    Mme. Véronica Cubarle
 <br>    Passage du Cardinal 13B
 <br>    1701 Fribourg
 </ul>
-<br>Genève sont envoyées à:
+Genève sont envoyées à:
 <ul>
-<br>    Fondation Campus Biotech Geneva
+    Fondation Campus Biotech Geneva
 <br>    Mr. Roberto Lia
 <br>    Chemin des Mines 9
 <br>    1202 Genève
 </ul>
-<br>
-<br>
-<br>Meilleures salutations
+Meilleures salutations
 <br>______________________
-<br>
 <br>
 <br>Madam, Sir,
 <br>
@@ -459,45 +452,44 @@ English below
 <br>
 <br>We inform you that business cards for EPFL
 <br>
-<br> Neuchâtel are sent to:
+Neuchâtel are sent to:
 <ul>
-<br>    EPFL STI IMT-GE
+    EPFL STI IMT-GE
 <br>    Mrs. Joëlle Banjac
 <br>    Case postale 526
 <br>    Rue de la Maladière 71b
 <br>    2002 Neuchâtel
 </ul>
-<br>Sion are sent to:
+Sion are sent to:
 <ul>
-<br>     EPFL Valais
+     EPFL Valais
 <br>    Magasin ISIC / Mr. Seydoux
 <br>    Rte de l'Industrie 17
 <br>    Case postale 440
 <br>    1950 Sion
 </ul>
-<br>Fribourg are sent to:
+Fribourg are sent to:
 <ul>
 <br>    EPFL Fribourg
 <br>    Mme. Véronica Cubarle
 <br>    Passage du Cardinal 13B
 <br>    1701 Fribourg
 </ul>
-<br>Geneva are sent to:
+Geneva are sent to:
 <ul>
-<br>    Fondation Campus Biotech Geneva
+    Fondation Campus Biotech Geneva
 <br>    Mr. Roberto Lia
 <br>    Chemin des Mines 9
 <br>    1202 Genève
 </ul>
-<br>
-<br>Kind regards
+Kind regards
 <br>
 <br>Carinne Christinaz
 <br>Tel.: 021 693 42 82
 <br>E-mail: carinne.christinaz\@epfl.ch	
 	};
 	$msg 			=~ s/XXX/$cmd->{firstname} $cmd->{name}/g;
-	my $dest 	= $cmd->{mail};	
+	my $dest 	= $cmd->{email};	
 	#	- notify admin
 	$dest 	 .= ','.$cmd->{respemail} if $cmd->{respemail};
 
@@ -637,8 +629,8 @@ warn "-->del : $args->{nocmd}\n" if  $verbose;
 <br>Questions and support : $helpdesk
 <br>
 		};
-		my $dest = $cmd->{mail};	
-	$dest 	 .= ','.$cmd->{respemail} if $cmd->{respemail};
+		my $dest = $cmd->{email};	
+			 $dest .= ','.$cmd->{respemail} if $cmd->{respemail};
 
 		my $subj = qq{Repro : commande de cartes de visite annulée $cmd->{nocmd} - $cmd->{firstname} $cmd->{name}};
 		mailto ($dest, $subj, $msg);
@@ -650,55 +642,57 @@ warn "-->del : $args->{nocmd}\n" if  $verbose;
 	
 }
 
+#_______________
 sub mailto {
   my ($dest, $subj, $msg, $cmd) = @_;
+warn "mailto DEBUG=$DEBUG :: dest=$dest,subj=$subj=\n";
 
-  my $sendmail = '/usr/sbin/sendmail';
+  $dest = $mailRepro unless $dest;
+  $dest = 'ion.cionca@epfl.ch' if $DEBUG;
 
- 	if ($DEBUG) {
- 		warn "--> mailto : $dest, $subj\n" if  $verbose;
-# 		return;
- 	}
-  $dest			 	 = $mailRepro if $DEBUG;
+#   utf8::encode($subj);
+#   utf8::encode($msg);
+  
+	$msg = qq{
+	<header>
+	<link rel="stylesheet" href="https://web2018.epfl.ch/2.1.0/css/elements.min.css">
+	<link rel="stylesheet" href="http://test-businesscard.epfl.ch/styles/businesscard.css">
+	</header>
+	<body style="padding: 20px;">
+	$msg
+	<br>
+	};
+	if ($cmd) {
+		my $template = initTempl ('card.tmpl', $cmd);
+		$msg .= qq{
+		<hr><b>Votre commande</b><br>
+		}.$template->output;
+;
+	}
 
-  unless ($dest) {
-		$subj .= qq{ **ERR : dest vide **}; 
-		$dest  = 'ion.cionca@epfl.ch';
+warn "mailto A :: dest=$dest\n";
+
+  my %mail = (
+		From 	 	=> 'noreply@epfl.ch',
+		To	    => $dest,
+		Smtp 	 	=> 'mail.epfl.ch',
+		Subject => $subj,
+		Message => $msg,
+		charset => 'iso-8859-1',
+  );
+
+  $mail{'Content-Type'} 						 = 'text/html; charset="iso-8859-1"';	
+#  $mail{'Content-Transfer-Encoding'} = '8bit';	
+  
+  if (sendmail (%mail)) {
+     if ($Mail::Sendmail::error) {
+		warn "sendMail  :: ** ERR 1 : $Mail::Sendmail::error";
+     } else {
+		$msg =~ s/\n/;/g;
+     }
+  } else {
+		warn "sendMail  :: ** ERR 2 : $Mail::Sendmail::error";
   }
-  my $subject = encode_mimeword($subj);
-  my $replyTo = 'noreply@epfl.ch';
-  my $mailFrom= 'noreply@epfl.ch';
-#  my $mailCc	= 'ion.cionca@epfl.ch';
- 
-  eval {
-  	open (MAIL, "| $sendmail -t -F$mailFrom -f$mailFrom") or return;
-  	print MAIL qq{To: $dest\n};
-#  	print MAIL qq{Cc: $mailCc\n};
-  	print MAIL qq{From: $mailFrom\n};
-  	print MAIL qq{Reply-to: $replyTo
-Subject: $subject
-Content-type: text/html; charset=iso-8859-1
-
-<header>
-<link rel="stylesheet" href="https://web2018.epfl.ch/2.1.0/css/elements.min.css">
-<link rel="stylesheet" href="http://test-businesscard.epfl.ch/styles/businesscard.css">
-</header>
-<body style="padding: 20px;">
-
-$msg
-<br>
-};
-		if ($cmd) {
-			my $template = initTempl ('card.tmpl', $cmd);
-			print MAIL qq{<hr><b>Votre commande</b><br>},$template->output;
-		}
-
-  	close (MAIL);
-  } or do {
-  	warn "error in mailto [ $dest ] : $@\n"; 
-  	return
-  };
-
 }
 
 #--------
@@ -767,7 +761,6 @@ sub getAllCmdsByStatus {
 #--------
 sub getCmdsByStatus {
 	my $etat = shift;
-#warn "--> getCmdsByStatus : $etat\n" ;
 
 	my $sql = qq{select * from cmds };
 		 $sql .= qq{ where etat=? } if ($etat) ;
@@ -898,7 +891,6 @@ sub setTmplParam {
 #	-------------
 sub initTempl {
 	my ($tmplpath, $cmd) = @_;
-warn "--> initTempl : $tmplpath\n" if $verbose;	
 	
 	error ('init_templ') unless $tmplpath;
 	
@@ -907,7 +899,7 @@ warn "--> initTempl : $tmplpath\n" if $verbose;
 		strict 						=> 0,
 		cache 						=> 1,
 		global_vars 			=> 1,
-		utf8 							=> 1,
+#		utf8 							=> 1,
     die_on_bad_params => 0,
 	) or die "err : $!";
 
@@ -925,9 +917,6 @@ warn "--> initTempl : $tmplpath\n" if $verbose;
 	$template->param(isAdmin				 => 1) if isAdmin() || isReproStaff();
 	$template->param(isReproStaff		 => 1) if isReproStaff();
 
-
-warn "--> initTempl : A\n" if $verbose;	
-
 	my @users_loop;
 	foreach my $sciper (sort { $usersToManage->{$a}->{nom} cmp $usersToManage->{$b}->{nom} } keys %$usersToManage) {
 		push @users_loop, {
@@ -937,9 +926,6 @@ warn "--> initTempl : A\n" if $verbose;
 		}
 	}
 	$template->param(users_loop			 => \@users_loop );
-#warn "--> initTempl : users_loop\n".Dumper(@users_loop);	
-
-warn "--> initTempl : B\n" if $verbose;	
 
 	my @fonds_loop;
 	foreach my $fond (sort keys %$adminFonds) {
@@ -951,8 +937,6 @@ warn "--> initTempl : B\n" if $verbose;
 	}
 	$template->param(fonds_loop			 => \@fonds_loop );
 
-warn "--> initTempl : C\n" if $verbose;	
-
 	my $cmdsByStatus	= getAllCmdsByStatus () ;
 	my @status_loop;
 	foreach my $status_id (sort { $a <=> $b } keys %$cards_status) {
@@ -963,8 +947,6 @@ warn "--> initTempl : C\n" if $verbose;
 		};
 	}
 	$template->param(status_loop		 => \@status_loop);
-
-warn "--> initTempl : D\n" if $verbose;	
 
 	return $template unless $cmd;
 
@@ -1258,13 +1240,13 @@ warn "--> authenticate : $login->{sciper}, $login->{name}, $login->{firstname}\n
   $adminUnits = $Accreds->getAllUnitsWhereHasRight($login->{sciper}, 'cartevisite');
   error ('no_access') if !$adminUnits;
 	map { delete $adminUnits->{$_} if $adminUnits->{$_} =~ /n/g; } keys %$adminUnits;
-#warn "--> auth adminUnits\n".Dumper($adminUnits) if  $verbose;
+ 
 	$usersToManage = getPersonsFromUnits(keys %$adminUnits );
-#warn "--> auth usersToManage\n".Dumper($usersToManage) if  $verbose;
+ 
 	error ('no_users') unless $usersToManage;
 	$adminFonds 	 = getFondsForUnits();
-#warn "--> auth adminFonds\n".Dumper($adminFonds);
 	error ('no_funds') unless isReproStaff() || $adminFonds;
+ 	
 }
 
 #--------
@@ -1305,6 +1287,19 @@ sub canManage {
 	return 0 unless $scipertodo;
 	return 1 if			isReproStaff();
 	return 0 unless isAdmin();
+	return 1 if $usersToManage->{$scipertodo};
+
+	return 0;
+
+}
+
+#--------
+sub canManage_OLD {
+	my $scipertodo = shift;
+	
+	return 0 unless $scipertodo;
+	return 1 if			isReproStaff();
+	return 0 unless isAdmin();
 	map {
 		return 1 if defined $adminUnits->{$_->{unitid}}  ;
 	} $Accreds->getAccreds($scipertodo);
@@ -1322,6 +1317,17 @@ sub canManage_ALL {
 	return 1 if $cmd->{resp} eq $login->{sciper};
 	return 0;
 
+}
+
+sub getManagedUsers {
+	my $users;
+	foreach my $unit (keys %$adminUnits) {
+		my @personsInUnit = $Accreds->getPersonsInUnit($unit);
+		map { 
+			$users->{$_} = 1;
+		} @personsInUnit;
+	}
+	return $users;
 }
 
 #--------
@@ -1507,7 +1513,6 @@ warn "--> getPersons : key=$key\n" if $verbose;
 													 ? $data->{fonctionen}
 													 : $data->{fonctionfr};
 		}		
-warn "-->hierarchie=$accred->{hierarchie}, path4=$accred->{path4}\n";
 		if ( defined $FACULTES->{$accred->{hierarchie}} && scalar @{$FACULTES->{$accred->{hierarchie}}->{$card_lang}} > 1 ) {
 			$accred->{path1} = $FACULTES->{$accred->{hierarchie}}->{$card_lang}->[0];
 			$accred->{path2} = $FACULTES->{$accred->{hierarchie}}->{$card_lang}->[1];
