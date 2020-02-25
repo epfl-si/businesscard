@@ -188,7 +188,8 @@ sub edit {
 	my $cmd;
 	my $person;
 	if ($args->{nocmd}) {
-		$cmd 				=  getCmd($args->{nocmd});
+ 		$cmd 				=  getCmd($args->{nocmd});
+		show() if $cmd->{etat} =~ /(3|4|5)/;
 		my $fond		= $cmd->{fond};
 		my $etat		= $cmd->{etat};
 		my @persons = getPersons ($cmd->{scipertodo});
@@ -522,7 +523,7 @@ sub copy {
 		 $cmd->{nocmd} 	= '';
 		 $cmd->{fond} 	= '';
 		 $cmd->{date}  	= sprintf "%04d-%02d-%02d %02d:%02d:%02d", $year, $mon, $mday, $hour, $mon, $sec;
-		 $cmd->{done_by}= $login->{sciper};
+		 $cmd->{resp}		= $login->{sciper};
 		 $cmd->{etat} 	= '1';
 	my @persons 			= getPersons ($cmd->{scipertodo});
 	my $person 				= $persons[0];
@@ -712,7 +713,7 @@ sub isAdmin {
 sub updateCmd {
 	my $cmd = shift;
 
-#warn "--> updateCmd cmd\n".Dumper($cmd) if  $verbose;	
+#warn "--> updateCmd cmd\n".Dumper($cmd) ;	
 	my ($sql, @params, $nocmd);
 	foreach my $field (keys %$cmd) {
 		next if $field =~ /^(nocmd|respname|respfirstname|respemail)$/;
@@ -899,7 +900,7 @@ sub initTempl {
 		strict 						=> 0,
 		cache 						=> 1,
 		global_vars 			=> 1,
-#		utf8 							=> 1,
+		utf8 							=> 1,
     die_on_bad_params => 0,
 	) or die "err : $!";
 
