@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y \
         libdbi-perl \
         gcc \
         vim \
+        curl \
     --no-install-recommends && rm -rf /var/lib/apt/lists/*
 
 ################################################################################
@@ -100,6 +101,7 @@ RUN cpanm --notest \
           Mail::Sendmail \
           HTML::Template \
           MIME::Words \
+          JSON::SL \
           local::lib
 
 # Tequila config files
@@ -136,6 +138,7 @@ RUN mkdir -p /etc/apache2/conf.d && \
     mkdir /etc/apache2/ssl
 
 COPY ./conf/docker/apache2.conf /etc/apache2/apache2.conf
+COPY ./conf/docker/ports.conf /etc/apache2/ports.conf
 COPY ./conf/docker/25-businesscard.epfl.ch.conf /etc/apache2/sites-available/25-businesscard.epfl.ch.conf
 RUN chown dinfo:dinfo /etc/apache2/sites-available/25-businesscard.epfl.ch.conf
 COPY ./conf/docker/dinfo-perl.conf ./conf/docker/perl.conf \
@@ -155,13 +158,6 @@ RUN echo "umask 0002" >> /etc/apache2/envvars && \
     a2dissite 000-default.conf && \
     a2dissite default-ssl.conf && \
     a2ensite 25-businesscard.epfl.ch.conf
-
-################################################################################
-# Bash
-################################################################################
-RUN echo "alias logs='tail -f /var/log/apache2/error.log'" >> /home/dinfo/.bashrc
-RUN echo "alias restart='sudo apachectl restart'" >> /home/dinfo/.bashrc
-RUN echo "alias ll='ls -al'" >> /home/dinfo/.bashrc
 
 ################################################################################
 # Libraries
@@ -189,8 +185,18 @@ RUN chown -R dinfo:dinfo /var/www/vhosts/businesscard.epfl.ch && \
 COPY ./conf/docker/docker-entrypoint.sh /home/dinfo/
 RUN chmod a+x /home/dinfo/docker-entrypoint.sh
 
-# For logging to ELK with gelf
-RUN touch /var/log/apache2/access.log && touch /var/log/apache2/error.log && ln -sf /proc/self/fd/1 /var/log/apache2/access.log && ln -sf /proc/self/fd/2 /var/log/apache2/error.log
+################################################################################
+# Ownership so that these folders can be written when running in K8S
+################################################################################
+RUN chgrp -R 0 /opt/dinfo/etc && chmod -R g=u /opt/dinfo/etc
+RUN chgrp -R 0 /etc/tequila.conf && chmod -R g=u /etc/tequila.conf
+RUN chgrp -R 0 /etc/apache2/sites-available && chmod -R g=u /etc/apache2/sites-available
+RUN chgrp -R 0 /var/www/vhosts/groups.epfl.ch && chmod -R g=u /var/www/vhosts/groups.epfl.ch
+RUN chgrp -R 0 /home/dinfo && chmod -R g=u /home/dinfo
 
-USER dinfo
+ENV TERM=xterm
+ENV TZ=Europe/Zurich
+ENV PERL5LIB=/opt/dinfo/lib/perl
+
+USER 1001
 ENTRYPOINT ["/home/dinfo/docker-entrypoint.sh"]
