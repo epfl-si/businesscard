@@ -7,11 +7,9 @@ export TEQUILA_FINGERPRINT=`openssl s_client -connect $TEQUILA_HOST:443 < /dev/n
 ###############################################################
 # Substitute env vars in config files
 ###############################################################
-envsubst < "/home/dinfo/dbs.conf" > "/tmp/dbs.conf"
-cat /tmp/dbs.conf > /opt/dinfo/etc/dbs.conf
 envsubst < "/home/dinfo/tequila.conf" > "/tmp/tequila.conf"
 cat /tmp/tequila.conf > /etc/tequila.conf
 envsubst < "/home/dinfo/25-businesscard.epfl.ch.conf" > "/tmp/apache.conf"
 cat /tmp/apache.conf > /etc/apache2/sites-available/25-businesscard.epfl.ch.conf
 
-sudo rm -f /var/run/apache2/apache2.pid && sudo /usr/sbin/apachectl -e debug -D FOREGROUND -k restart
+apachectl -e debug -D FOREGROUND
