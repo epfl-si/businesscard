@@ -156,8 +156,8 @@ $tmpl_labels = {
 		en	=> qq{Fund},
 	},
 	label_path1	=> {
-		fr	=> qq{<b>Faculté (2 lignes)</b>},
-		en	=> qq{<b>Faculty (2 lines)</b>},
+		fr	=> qq{<b>Niveau 2 (2 lignes)</b>},
+		en	=> qq{<b>Level 2 (2 lines)</b>},
 	},
 	label_path2	=> {
 		fr	=> qq{Institut, Labo ou Service},

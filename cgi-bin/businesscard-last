@@ -186,8 +186,7 @@ sub edit {
 	my $cmd;
 	my $person;
 	if ($args->{nocmd}) {
- 		$cmd 				=  getCmd($args->{nocmd});
-		show() if $cmd->{etat} =~ /(3|4|5)/;
+		$cmd 				=  getCmd($args->{nocmd});
 		my $fond		= $cmd->{fond};
 		my $etat		= $cmd->{etat};
 		my @persons = getPersons ($cmd->{scipertodo});
@@ -492,7 +491,7 @@ English below
 <br>E-mail: carinne.christinaz\@epfl.ch	
 	};
 	$msg 			=~ s/XXX/$cmd->{firstname} $cmd->{name}/g;
-	my $dest 	= $cmd->{email};	
+	my $dest 	= $cmd->{mail};	
 	#	- notify admin
 	$dest 	 .= ','.$cmd->{respemail} if $cmd->{respemail};
 
@@ -525,7 +524,7 @@ sub copy {
 		 $cmd->{nocmd} 	= '';
 		 $cmd->{fond} 	= '';
 		 $cmd->{date}  	= sprintf "%04d-%02d-%02d %02d:%02d:%02d", $year, $mon, $mday, $hour, $mon, $sec;
-		 $cmd->{resp}		= $login->{sciper};
+		 $cmd->{done_by}= $login->{sciper};
 		 $cmd->{etat} 	= '1';
 	my @persons 			= getPersons ($cmd->{scipertodo});
 	my $person 				= $persons[0];
@@ -632,8 +631,8 @@ warn "-->del : $args->{nocmd}\n" if  $verbose;
 <br>Questions and support : $helpdesk
 <br>
 		};
-		my $dest = $cmd->{email};	
-			 $dest .= ','.$cmd->{respemail} if $cmd->{respemail};
+		my $dest = $cmd->{mail};	
+	$dest 	 .= ','.$cmd->{respemail} if $cmd->{respemail};
 
 		my $subj = qq{Repro : commande de cartes de visite annulée $cmd->{nocmd} - $cmd->{firstname} $cmd->{name}};
 		mailto ($dest, $subj, $msg);
@@ -645,7 +644,6 @@ warn "-->del : $args->{nocmd}\n" if  $verbose;
 	
 }
 
-#_______________
 sub mailto {
   my ($dest, $subj, $msg, $cmd) = @_;
 
@@ -655,7 +653,7 @@ sub mailto {
  		warn "--> mailto : $dest, $subj\n" if  $verbose;
 # 		return;
  	}
-  $dest			 	 = $mailRepro unless $dest;
+  $dest			 	 = $mailRepro if $DEBUG;
 
   unless ($dest) {
 		$subj .= qq{ **ERR : dest vide **}; 
@@ -714,7 +712,7 @@ sub isAdmin {
 sub updateCmd {
 	my $cmd = shift;
 
-#warn "--> updateCmd cmd\n".Dumper($cmd) ;	
+#warn "--> updateCmd cmd\n".Dumper($cmd) if  $verbose;	
 	my ($sql, @params, $nocmd);
 	foreach my $field (keys %$cmd) {
 		next if $field =~ /^(nocmd|respname|respfirstname|respemail)$/;
@@ -763,6 +761,7 @@ sub getAllCmdsByStatus {
 #--------
 sub getCmdsByStatus {
 	my $etat = shift;
+#warn "--> getCmdsByStatus : $etat\n" ;
 
 	my $sql = qq{select * from cmds };
 		 $sql .= qq{ where etat=? } if ($etat) ;
@@ -893,6 +892,7 @@ sub setTmplParam {
 #	-------------
 sub initTempl {
 	my ($tmplpath, $cmd) = @_;
+warn "--> initTempl : $tmplpath\n" if $verbose;	
 	
 	error ('init_templ') unless $tmplpath;
 	
@@ -912,12 +912,15 @@ sub initTempl {
 	$template->param(path_info  		 => $ENV{PATH_INFO});
 	$template->param(lang				 		 => $lang );
 	$template->param(browser_EN 		 => $lang eq 'en' );
-	$template->param(browser_FR 		 => $lang eq 'fr' ) ;
+	$template->param(browser_FR 		 => $login->{name}) ;
 	$template->param(login_sciper		 => $login->{sciper}) ;
 	$template->param(login_name			 => $login->{name}) ;
 	$template->param(login_firstname => $login->{firstname}) ;
 	$template->param(isAdmin				 => 1) if isAdmin() || isReproStaff();
 	$template->param(isReproStaff		 => 1) if isReproStaff();
+
+
+warn "--> initTempl : A\n" if $verbose;	
 
 	my @users_loop;
 	foreach my $sciper (sort { $usersToManage->{$a}->{nom} cmp $usersToManage->{$b}->{nom} } keys %$usersToManage) {
@@ -928,6 +931,9 @@ sub initTempl {
 		}
 	}
 	$template->param(users_loop			 => \@users_loop );
+#warn "--> initTempl : users_loop\n".Dumper(@users_loop);	
+
+warn "--> initTempl : B\n" if $verbose;	
 
 	my @fonds_loop;
 	foreach my $fond (sort keys %$adminFonds) {
@@ -939,6 +945,8 @@ sub initTempl {
 	}
 	$template->param(fonds_loop			 => \@fonds_loop );
 
+warn "--> initTempl : C\n" if $verbose;	
+
 	my $cmdsByStatus	= getAllCmdsByStatus () ;
 	my @status_loop;
 	foreach my $status_id (sort { $a <=> $b } keys %$cards_status) {
@@ -949,6 +957,8 @@ sub initTempl {
 		};
 	}
 	$template->param(status_loop		 => \@status_loop);
+
+warn "--> initTempl : D\n" if $verbose;	
 
 	return $template unless $cmd;
 
@@ -1242,13 +1252,13 @@ warn "--> authenticate : $login->{sciper}, $login->{name}, $login->{firstname}\n
   $adminUnits = $Accreds->getAllUnitsWhereHasRight($login->{sciper}, 'cartevisite');
   error ('no_access') if !$adminUnits;
 	map { delete $adminUnits->{$_} if $adminUnits->{$_} =~ /n/g; } keys %$adminUnits;
- 
+#warn "--> auth adminUnits\n".Dumper($adminUnits) if  $verbose;
 	$usersToManage = getPersonsFromUnits(keys %$adminUnits );
- 
+#warn "--> auth usersToManage\n".Dumper($usersToManage) if  $verbose;
 	error ('no_users') unless $usersToManage;
 	$adminFonds 	 = getFondsForUnits();
+#warn "--> auth adminFonds\n".Dumper($adminFonds);
 	error ('no_funds') unless isReproStaff() || $adminFonds;
- 	
 }
 
 #--------
@@ -1289,19 +1299,6 @@ sub canManage {
 	return 0 unless $scipertodo;
 	return 1 if			isReproStaff();
 	return 0 unless isAdmin();
-	return 1 if $usersToManage->{$scipertodo};
-
-	return 0;
-
-}
-
-#--------
-sub canManage_OLD {
-	my $scipertodo = shift;
-	
-	return 0 unless $scipertodo;
-	return 1 if			isReproStaff();
-	return 0 unless isAdmin();
 	map {
 		return 1 if defined $adminUnits->{$_->{unitid}}  ;
 	} $Accreds->getAccreds($scipertodo);
@@ -1319,17 +1316,6 @@ sub canManage_ALL {
 	return 1 if $cmd->{resp} eq $login->{sciper};
 	return 0;
 
-}
-
-sub getManagedUsers {
-	my $users;
-	foreach my $unit (keys %$adminUnits) {
-		my @personsInUnit = $Accreds->getPersonsInUnit($unit);
-		map { 
-			$users->{$_} = 1;
-		} @personsInUnit;
-	}
-	return $users;
 }
 
 #--------
@@ -1515,6 +1501,7 @@ warn "--> getPersons : key=$key\n" if $verbose;
 													 ? $data->{fonctionen}
 													 : $data->{fonctionfr};
 		}		
+warn "-->hierarchie=$accred->{hierarchie}, path4=$accred->{path4}\n";
 		if ( defined $FACULTES->{$accred->{hierarchie}} && scalar @{$FACULTES->{$accred->{hierarchie}}->{$card_lang}} > 1 ) {
 			$accred->{path1} = $FACULTES->{$accred->{hierarchie}}->{$card_lang}->[0];
 			$accred->{path2} = $FACULTES->{$accred->{hierarchie}}->{$card_lang}->[1];
