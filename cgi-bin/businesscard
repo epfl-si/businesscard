@@ -1678,3 +1678,4 @@ sub setCookie {
 #   PRIMARY KEY (`nocmd`),
 #   UNIQUE KEY `nocmd_UNIQUE` (`nocmd`)
 # ) ENGINE=MyISAM DEFAULT CHARSET=utf8
+

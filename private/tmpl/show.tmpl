@@ -28,19 +28,20 @@
 
 	<TMPL_IF NAME=status_queue>
 		<div style="display: flex; justify-content: space-between; width: 80%; padding-top: 25px;">
-			<div style="flex: 1;">
-				<button name="submit" class="bigger bold" onclick="location.href='/edit?nocmd=<TMPL_VAR NAME=nocmd>'; return false;"><TMPL_VAR NAME=fix></button>
-			</div>
-			<div  style="flex: 1;">
-				<button name="delete" class="bigger bold" onclick="
-				if (confirm ('<TMPL_VAR NAME=delete_confirm>')) {
-					location.href='/delcmd?nocmd=<TMPL_VAR NAME=nocmd>&notif=1';
-					return false;
-				} else {
-				 return false;
-				}"><TMPL_VAR NAME=delete_label>
-				</button>
-			</div>
+				<div style="flex: 1;">
+					<button name="submit" class="bigger bold" onclick="location.href='/edit?nocmd=<TMPL_VAR NAME=nocmd>'; return false;"><TMPL_VAR NAME=fix></button>
+				</div>
+
+				<div  style="flex: 1;">
+					<button name="delete" class="bigger bold" onclick="
+					if (confirm ('<TMPL_VAR NAME=delete_confirm>')) {
+						location.href='/delcmd?nocmd=<TMPL_VAR NAME=nocmd>&notif=1';
+						return false;
+					} else {
+					 return false;
+					}"><TMPL_VAR NAME=delete_label>
+					</button>
+				</div>
 
 			</div>
 
@@ -74,6 +75,14 @@
 						<br>
 						<b>Annuler cette commande</b> : en cas d'erreur ou abandon de la commande
 					</div>
+
+					<div>
+						<button name="copy" class="bigger bold" onclick="location.href='/copy?nocmd=<TMPL_VAR NAME=nocmd>'; return false;">Dupliquer	</button>
+						<br>
+						<br>
+						<b>Dupliquer cette commande</b>
+					</div>
+
 				</div>
 		</TMPL_IF>
 
@@ -82,16 +91,24 @@
 	<TMPL_IF NAME=status_done>
 		<TMPL_IF NAME=isReproStaff>
 			<div style="display: flex; justify-content: space-between; width: 80%; padding-top: 25px;">
-			<div  style="flex: 1;">
-				<button name="delete" class="bigger bold" onclick="
-				if (confirm ('<TMPL_VAR NAME=delete_confirm>')) {
-					location.href='/delcmd?nocmd=<TMPL_VAR NAME=nocmd>&notif=1';
-					return false;
-				} else {
-				 return false;
-				}"><TMPL_VAR NAME=delete_label>
-				</button>
-			</div>
+				<div  style="flex: 1;">
+					<button name="delete" class="bigger bold" onclick="
+					if (confirm ('<TMPL_VAR NAME=delete_confirm>')) {
+						location.href='/delcmd?nocmd=<TMPL_VAR NAME=nocmd>&notif=1';
+						return false;
+					} else {
+					 return false;
+					}"><TMPL_VAR NAME=delete_label>
+					</button>
+				</div>
+
+				<div>
+					<button name="copy" class="bigger bold" onclick="location.href='/copy?nocmd=<TMPL_VAR NAME=nocmd>'; return false;">Dupliquer	</button>
+					<br>
+					<br>
+					<b>Dupliquer cette commande</b>
+				</div>
+
 			</div>
 		</TMPL_IF>
 
