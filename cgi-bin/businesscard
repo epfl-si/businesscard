@@ -438,9 +438,16 @@ English below
 <br>    1202 Genève
 </ul>
 <br>
-<br>
 <br>Meilleures salutations
-<br>______________________
+<br>
+<br><img src="https://web2018.epfl.ch/5.2.0/icons/epfl-logo.png" width="110px"/>
+<br>Carinne Christinaz
+<br>Bureau : BP 243
+<br>Tél. : 021 693 42 82
+<br>E-mail : carinne.christinaz\@epfl.ch        
+<br><a href="https://go.epfl.ch/venir-au-centre-impression">venir au centre d'impression</a>.
+<br>
+<hr>
 <br>
 <br>
 <br>Madam, Sir,
@@ -464,7 +471,7 @@ English below
 </ul>
 <br>Sion are sent to:
 <ul>
-<br>     EPFL Valais
+<br>    EPFL Valais
 <br>    Magasin ISIC / Mr. Seydoux
 <br>    Rte de l'Industrie 17
 <br>    Case postale 440
@@ -487,9 +494,13 @@ English below
 <br>
 <br>Kind regards
 <br>
+<br><img src="https://web2018.epfl.ch/5.2.0/icons/epfl-logo.png" width="110px" />
 <br>Carinne Christinaz
-<br>Tel.: 021 693 42 82
-<br>E-mail: carinne.christinaz\@epfl.ch	
+<br>Office: BP 243
+<br>Phone: 021 693 42 82
+<br>E-mail: carinne.christinaz\@epfl.ch 
+<br><a href="https://go.epfl.ch/venir-au-centre-impression">come to the print centre</a>.
+<br>
 	};
 	$msg 			=~ s/XXX/$cmd->{firstname} $cmd->{name}/g;
 	my $dest 	= $cmd->{email};	
