@@ -4,14 +4,13 @@ LABEL maintainer "olivier.delobre@epfl.ch"
 ################################################################################
 # System packages
 ################################################################################
-RUN apt-get update && apt-get install -y \
+RUN chmod 1777 /tmp && apt-get update && apt-get install -y \
         apache2 \
         libaio1 \
         libapache2-mod-perl2 \
         default-libmysqlclient-dev \
         locales \
-        default-mysql-client\
-        sudo \
+        default-mysql-client \
         unzip \
         gettext-base \
         openssl \
@@ -50,7 +49,7 @@ RUN echo "Europe/Zurich" > /etc/timezone && \
 # Users & groups
 ################################################################################
 RUN groupadd apache && \
-    useradd -r -g apache apache
+    useradd -r --uid 1001 -g apache apache
 
 ################################################################################
 # Perl deps (DBD::Oracle, Tequila, ...)
@@ -65,8 +64,9 @@ RUN mkdir -p /opt/oracle && \
 COPY cpanfile cpanfile
 RUN cpanm --installdeps --notest . || cat /root/.cpanm/work/*/build.log
 
-# Tequila config files
-COPY ./conf/docker/dbs.conf /home/dinfo
+################################################################################
+# Config
+################################################################################
 COPY ./conf/docker/tequila.conf /home/dinfo
 RUN touch /etc/tequila.conf
 COPY ./conf/docker/25-businesscard.epfl.ch.conf /home/dinfo
@@ -80,14 +80,12 @@ RUN mkdir -p /var/www/vhosts/businesscard.epfl.ch/cgi-bin && \
     mkdir -p /var/www/vhosts/businesscard.epfl.ch/htdocs/styles && \
     mkdir -p /var/www/vhosts/businesscard.epfl.ch/htdocs/images && \
     mkdir -p /var/www/vhosts/businesscard.epfl.ch/logs && \
-    mkdir -p /var/www/vhosts/businesscard.epfl.ch/private/Tequila/Sessions
+    mkdir -p /var/www/vhosts/businesscard.epfl.ch/private/Tequila/Sessions && \
+    mkdir -p /var/www/vhosts/businesscard.epfl.ch/private/lib/lib/perl5
 
 COPY ./conf/businesscard.conf /var/www/vhosts/businesscard.epfl.ch/conf/businesscard.conf
 
 WORKDIR /var/www/vhosts/businesscard.epfl.ch
-
-RUN mkdir -p /var/www/vhosts/businesscard.epfl.ch/private/lib && \
-    mkdir -p /var/www/vhosts/businesscard.epfl.ch/private/lib/lib/perl5
 
 ################################################################################
 # Apache
@@ -122,7 +120,7 @@ COPY ./tequila-perl-client/Tequila/Client.pm /opt/dinfo/lib/perl/Tequila/Client.
 COPY ./cgi-bin/tmpl_labels.inc /opt/dinfo/lib/perl/tmpl_labels.inc
 
 ################################################################################
-# Copy app
+# App
 ################################################################################
 COPY ./cgi-bin/. /var/www/vhosts/businesscard.epfl.ch/cgi-bin/
 COPY ./htdocs/. /var/www/vhosts/businesscard.epfl.ch/htdocs/
@@ -137,15 +135,19 @@ RUN chmod a+x /home/dinfo/docker-entrypoint.sh
 ################################################################################
 # Ownership so that these folders can be written when running in K8S
 ################################################################################
-RUN chgrp -R 0 /opt/dinfo/etc && chmod -R g=u /opt/dinfo/etc
-RUN chgrp -R 0 /etc/tequila.conf && chmod -R g=u /etc/tequila.conf
-RUN chgrp -R 0 /etc/apache2/sites-available && chmod -R g=u /etc/apache2/sites-available
-RUN chgrp -R 0 /var/www/vhosts/businesscard.epfl.ch && chmod -R g=u /var/www/vhosts/businesscard.epfl.ch
-RUN chgrp -R 0 /home/dinfo && chmod -R g=u /home/dinfo
+RUN chgrp -R 0 /opt/dinfo/etc && chmod -R g=u /opt/dinfo/etc && \
+    chgrp -R 0 /etc/tequila.conf && chmod -R g=u /etc/tequila.conf && \
+    chgrp -R 0 /etc/apache2/sites-available && chmod -R g=u /etc/apache2/sites-available && \
+    chgrp -R 0 /var/www/vhosts/businesscard.epfl.ch && chmod -R g=u /var/www/vhosts/businesscard.epfl.ch && \
+    chgrp -R 0 /home/dinfo && chmod -R g=u /home/dinfo && \
+    chgrp -R 0 /var/log/apache2 && chmod -R g=u /var/log/apache2
 
 ENV TERM=xterm
 ENV TZ=Europe/Zurich
 ENV PERL5LIB=/opt/dinfo/lib/perl
 
+# Use Apache2 graceful stop to terminate
+STOPSIGNAL SIGWINCH
 USER 1001
+EXPOSE 8080
 ENTRYPOINT ["/home/dinfo/docker-entrypoint.sh"]
