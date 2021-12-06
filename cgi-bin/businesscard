@@ -28,7 +28,7 @@ require 'tmpl_labels.inc';
 
 	my $droitCVIS		= '11';
 	my $helpdesk		= '1234@epfl.ch';
-	my $repro_staff = '104782,147506,104732,126981,178145,331936';
+	my $repro_staff     = '104782,147506,104732,126981,178145,268229';
 	my $mailRepro		= 'carinne.christinaz@epfl.ch,roland.chabloz@epfl.ch,thomas.reynaud@epfl.ch,anne-sylvie.borter@epfl.ch,stephanie.kobi@epfl.ch';
 	my $mailRepro		= 'carinne.christinaz@epfl.ch';
 
