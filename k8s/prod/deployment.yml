@@ -59,7 +59,7 @@ spec:
                   key: E2EM_LINE
                   name: config
           image: >-
-            docker-registry.default.svc:5000/businesscard-test/businesscard:develop
+            docker-registry.default.svc:5000/businesscard-prod/businesscard:1.0.0
           imagePullPolicy: Always
           name: businesscard
           resources:
@@ -92,7 +92,7 @@ spec:
           - businesscard
         from:
           kind: ImageStreamTag
-          name: 'businesscard:develop'
-          namespace: businesscard-test
+          name: 'businesscard:1.0.0'
+          namespace: businesscard-prod
       type: ImageChange
     - type: ConfigChange

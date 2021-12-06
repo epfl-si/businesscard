@@ -4,9 +4,9 @@ metadata:
   labels:
     app: businesscard
   name: businesscard-route
-  namespace: businesscard-test
+  namespace: businesscard-preprod
 spec:
-  host: businesscard-test.epfl.ch
+  host: businesscard-preprod.epfl.ch
   port:
     targetPort: 8080-tcp
   tls:
