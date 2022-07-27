@@ -16,6 +16,8 @@ COPY conf/docker/ports.conf /etc/apache2/ports.conf
 
 COPY conf/docker/25-businesscard.conf /etc/apache2/conf-enabled/
 
+RUN set -e -x; mkdir -p /var/www/Tequila/Sessions; chmod 1777 /var/www/Tequila/Sessions
+
 COPY cpanfile /root
 RUN cpanm --installdeps --notest /root || cat /root/.cpanm/work/*/build.log
 
