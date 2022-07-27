@@ -24,6 +24,7 @@ RUN cpanm --installdeps --notest /root || cat /root/.cpanm/work/*/build.log
 
 COPY htdocs/ /var/www/html/
 COPY cgi-bin/ /var/www/cgi-bin/
+COPY private /var/www/private
 COPY ./cgi-bin/tmpl_labels.inc /opt/dinfo/lib/perl/tmpl_labels.inc
 
 COPY conf/docker/docker-entrypoint.sh /
