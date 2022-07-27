@@ -16,10 +16,12 @@ COPY conf/docker/ports.conf /etc/apache2/ports.conf
 
 COPY conf/docker/25-businesscard.conf /etc/apache2/conf-enabled/
 
+COPY cpanfile /root
+RUN cpanm --installdeps --notest /root || cat /root/.cpanm/work/*/build.log
+
 COPY htdocs/ /var/www/html/
 COPY cgi-bin/ /var/www/cgi-bin/
 COPY ./cgi-bin/tmpl_labels.inc /opt/dinfo/lib/perl/tmpl_labels.inc
-
 
 COPY conf/docker/docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
