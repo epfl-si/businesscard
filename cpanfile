@@ -14,3 +14,4 @@ requires 'HTML::Template', '2.9';
 requires 'MIME::Words', '5.427';
 requires 'JSON::SL', '1.0.7';
 requires 'local::lib', '2.000024';
+requires 'LWP::UserAgent', '6.67';
