@@ -12,6 +12,8 @@ services:
       - TEQUILA_HOST=test-tequila.epfl.ch
       - MOCK_ORACLE=1
       - SITE_URL=localhost:8080
+    volumes:
+      - ./dbs-dev.conf:/opt/dinfo/etc/dbs.conf
 
   mysql_businesscard:
     image: mysql:5.5
