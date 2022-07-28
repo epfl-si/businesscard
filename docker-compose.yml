@@ -24,6 +24,7 @@ services:
       - MYSQL_USER=businesscard
       - MYSQL_PASSWORD=businesscard
     volumes:
-      - ./conf/docker/initdb:/docker-entrypoint-initdb.d
+      # See `make initdb` in Makefile:
+      - ./initdb:/docker-entrypoint-initdb.d
     ports:
       - "23306:3306"
