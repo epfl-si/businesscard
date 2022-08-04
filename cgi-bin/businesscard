@@ -1217,11 +1217,13 @@ warn "--> error : msg=$msg\n";
 #--------
 sub authenticate {
   unless ($tequila) {
+		my $tequila_redirect_ports;
+		$tequila_redirect_ports = defined $ENV{'TEQUILA_REDIRECT_PORT'} ? $ENV{'TEQUILA_REDIRECT_PORT'} : 80;
 		$tequila = new Tequila::Client (
 			service    => 'Businesscards',
 			request    => [ 'uniqueid', 'allunits' ],
 			identities => 'any',
-			urlaccess  => "https://$ENV{SERVER_NAME}$ENV{REQUEST_URI}?$ENV{QUERY_STRING}",
+			urlaccess  => "https://$ENV{SERVER_NAME}:" . $tequila_redirect_ports . "$ENV{REQUEST_URI}?$ENV{QUERY_STRING}",
 		);
     $tequila->init ();
   } 
