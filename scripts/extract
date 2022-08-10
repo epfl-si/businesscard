@@ -1,0 +1,125 @@
+#!/usr/bin/perl
+#
+##############################################################################
+#
+# File Name:    extract - extractions cartes de visite -> Service Financier EPFL
+# Author:       Ion CIONCA (Ion.Cionca@epfl.ch) -
+#
+#########################################################################
+#####
+#
+#
+
+use lib '/opt/dinfo/lib/perl';
+
+use strict;
+use Mail::Sendmail;
+use MIME::Lite;
+use HTML::Entities ();
+use Encode;
+
+use Date::Calc qw(Days_in_Month);
+
+use Cadi::CadiDB;
+
+my $mailresp	= 'ion.cionca@epfl.ch';
+my $mailSF		= 'isabelle.chatton@epfl.ch,marc.fromentin@epfl.ch,barbara.scheuner@epfl.ch';
+#my $mailSF		= 'ion.cionca@epfl.ch';
+
+my @diiCFs 	= (
+		',0060,0061,0081,0082,0086,0087,0041,0042,0043,0044,0045,0046,0047,0048,0049,0064,0063,',
+		',2018,2019,2010,2011,2012,2015,',
+		);
+my $outfile 	= '/tmp/businesscard_facturation.txt';
+
+my %prices 		= (
+		'50',		'15',
+		'100',	'25',
+		'200',	'30',
+		'300',	'35',
+);
+
+my $fake	= 0;	#	- non mails, no DB update
+
+#	- yesterday
+	my ($sec,$min,$hour,$mday,$month,$year,$wday,$yday,$isdst) = localtime(time - 86400);
+		$month++;
+#---------------------
+#		$month = 6;
+#---------------------
+		$year 	 	 += 1900;
+	my $startdate = sprintf "%04d-%02d-01", $year, $month;
+	my $nbdaysmon	= Days_in_Month($year,$month);
+	my $enddate		= sprintf "%04d-%02d-%02d 23:59:59", $year, $month, $nbdaysmon;
+
+	print qq{Facturation businesscards	du : $startdate au : $enddate
+	};
+
+	open (OUT, ">$outfile") || die "err open $outfile : $!";
+	my $output = "Fonds;Compte;CC;CF;OIS;NoDV;OTP;Cop;Fonds;Compte;CC;CF;OIS;NoDV;OTP;Cop;Montant;Texte\n";
+
+	my $dbcards  = new Cadi::CadiDB ( dbname => 'businesscard',	utf8 => 1, );
+	my $sql = qq{select * from cmds where etat='4' and date between ? and ?};
+	my $sth = $dbcards->prepare($sql);
+	die '**ERR db_error prepare' unless $sth;
+	my $rv = $sth->execute( $startdate, $enddate);
+	die '** ERR db_error execute' unless $rv;
+
+	my $orders;
+	while (my $cmd = $sth->fetchrow_hashref) {
+		my $quant = $cmd->{quantite};
+		my $nocmd = $cmd->{nocmd};
+		my $cf	 	= $cmd->{cf};
+		my $total	= $prices{$quant};
+		my $descr = "$nocmd/$cmd->{scipertodo} ($cmd->{firstname} $cmd->{name})";
+		my $ois;
+			 $ois	  = '1051' if ($diiCFs[0] =~ /,$cf,/) ;
+			 $ois 	= '2023' if ($diiCFs[1] =~ /,$cf,/) ;
+		my $txt = sprintf "%s;539000;;;%s;;;;535742;709000;;;1051;;;;%.2f;%s\n", $cmd->{fond}, $ois, $total, $descr;
+		if ($total) {
+			printf OUT $txt;
+			warn  qq{$txt};
+			$orders .= qq{$cmd->{nocmd},};
+		}
+	}
+	close OUT;
+
+	#	- update order status to payed
+	unless ($fake) {
+		$orders =~ s/,$//;
+		$orders =~ s/,/','/g;
+		my $sql = qq{update cmds set etat='5' where nocmd in ('$orders')};
+		my $sth = $dbcards->prepare($sql);
+		die '**ERR db_error prepare' unless $sth;
+		my $rv = $sth->execute();
+		die '** ERR db_error execute' unless $rv;
+	}
+
+	$mailSF = 'ion.cionca@epfl.ch' if $fake;
+
+	my $msg = MIME::Lite->new(
+		From    => 'noreply@epfl.ch',
+		To      => $mailSF,
+		Subject => "Commandes de cartes de visites: facturation $month/$year",
+				Type   =>'multipart/mixed',
+		);
+	$msg->attach(
+		Type				=> 'text/plain',
+		Path				=> $outfile,
+		Filename		=> "cvis_fact.txt",
+		Disposition => 'attachment',
+	);
+
+
+	$msg->send('smtp', 'mail.epfl.ch') or die "err send: $!";
+
+	print qq{mail envoyé à : $mailSF
+	};
+
+
+#--------
+sub utf8tolatin1 {
+    my $string = shift;
+    $string =~ s/([\xC0-\xDF])([\x80-\xBF])/chr(ord($1)<<6&0xC0|ord($2)&0x3F)/eg;
+    return $string;
+}
