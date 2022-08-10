@@ -11,6 +11,7 @@ ENV APACHE_RUN_GROUP root
 ENV APACHE_RUN_DIR /tmp
 ENV APACHE_PID_FILE /tmp/apache.pid
 ENV APACHE_LOG_DIR /tmp
+ENV TEQUILA_REDIRECT_PORT 80
 
 COPY conf/docker/ports.conf /etc/apache2/ports.conf
 
