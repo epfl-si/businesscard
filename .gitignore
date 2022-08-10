@@ -2,3 +2,4 @@
 /prod/
 /test/
 initdb/3-accred-mock-data.sql
+.vscode
