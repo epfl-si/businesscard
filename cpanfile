@@ -15,3 +15,5 @@ requires 'MIME::Words', '5.427';
 requires 'JSON::SL', '1.0.7';
 requires 'local::lib', '2.000024';
 requires 'LWP::UserAgent', '6.67';
+requires 'MIME::Lite', '3.033';
+requires 'Date::Calc', '6.4';
