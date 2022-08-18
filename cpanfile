@@ -17,3 +17,5 @@ requires 'local::lib', '2.000024';
 requires 'LWP::UserAgent', '6.67';
 requires 'MIME::Lite', '3.033';
 requires 'Date::Calc', '6.4';
+requires 'Email::Stuffer', '0.018';
+requires 'Net::SMTP_auth', '0.08';
