@@ -1,9 +1,13 @@
 initdb/3-accred-mock-data.sql: /keybase/team/epfl_bsnscrd/initdb/3-accred.sql
 	cat $< > $@
 
-.PHONY: up
-up: initdb/3-accred-mock-data.sql
+.PHONY: up-domq
+up-domq: initdb/3-accred-mock-data.sql
 	$(MAKE) initdb
+	docker-compose up --build
+
+.PHONY: up
+up:
 	docker-compose up --build
 
 .PHONY: up-d
