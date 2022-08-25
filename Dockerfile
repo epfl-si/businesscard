@@ -2,8 +2,8 @@ FROM ghcr.io/epfl-si/common-libs:v0.2.0
 LABEL maintainer "isas-fsd@groupes.epfl.ch"
 
 USER root
-RUN set -e -x; apt -qy update; apt -qy install apache2; apt clean
-RUN a2enmod remoteip cgid
+RUN set -e -x; apt -qy update; apt -qy install apache2 libapache2-mod-perl2; apt clean
+RUN a2enmod remoteip cgid rewrite
 RUN a2disconf serve-cgi-bin
 
 ENV APACHE_RUN_USER www-data
