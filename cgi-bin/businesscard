@@ -28,7 +28,7 @@ require 'tmpl_labels.inc';
 
 	my $droitCVIS		= '11';
 	my $helpdesk		= '1234@epfl.ch';
-	my $repro_staff     = '104782,147506,104732,126981,178145,268229';
+	my $repro_staff     = '104782,147506,104732,126981,178145,268229,316897';
 	my $mailRepro		= 'carinne.christinaz@epfl.ch,roland.chabloz@epfl.ch,thomas.reynaud@epfl.ch,anne-sylvie.borter@epfl.ch,stephanie.kobi@epfl.ch';
 	my $mailRepro		= 'carinne.christinaz@epfl.ch';
 
@@ -119,25 +119,22 @@ my $FACULTES = {
 	my $card_lang = $args->{card_lang} ? $args->{card_lang} : $lang;
 
 	authenticate();
-#warn "--> PATH_INFO=$ENV{PATH_INFO} : lang=$lang, cookie_lang=$cookie_lang\n";
 	if ($args->{scipertodo}) {
 		error ('no_rights') unless canManage ($args->{scipertodo});
-#		$scipertodo = $args->{scipertodo};
 	} else {
-#		$args->{scipertodo} = $login->{sciper};
 	}
 	
-	if ($ENV{PATH_INFO} =~ /^\/edit$/)			{	edit (); }
-	if ($ENV{PATH_INFO} =~ /^\/show$/)			{	show (); }
-	if ($ENV{PATH_INFO} =~ /^\/valid$/)			{	valid (); }
-	if ($ENV{PATH_INFO} =~ /^\/queue$/)			{	queue (); }
-	if ($ENV{PATH_INFO} =~ /^\/encours$/)		{	encours (); }
-	if ($ENV{PATH_INFO} =~ /^\/done$/)			{	done (); }
-	if ($ENV{PATH_INFO} =~ /^\/donem$/)			{	donem (); }
-	if ($ENV{PATH_INFO} =~ /^\/archive$/)		{	archive (); }
-	if ($ENV{PATH_INFO} =~ /^\/delcmd$/)		{	delcmd (); }
-	if ($ENV{PATH_INFO} =~ /^\/list$/) 			{	list (); }
-	if ($ENV{PATH_INFO} =~ /^\/copy$/) 			{	copy (); }
+	if ($ENV{PATH_INFO} =~ /^\/edit$/)			{	edit	(); }
+	if ($ENV{PATH_INFO} =~ /^\/show$/)			{	show	(); }
+	if ($ENV{PATH_INFO} =~ /^\/valid$/)			{	valid	(); }
+	if ($ENV{PATH_INFO} =~ /^\/queue$/)			{	queue	(); }
+	if ($ENV{PATH_INFO} =~ /^\/encours$/)		{	encours	(); }
+	if ($ENV{PATH_INFO} =~ /^\/done$/)			{	done	(); }
+	if ($ENV{PATH_INFO} =~ /^\/donem$/)			{	donem	(); }
+	if ($ENV{PATH_INFO} =~ /^\/archive$/)		{	archive	(); }
+	if ($ENV{PATH_INFO} =~ /^\/delcmd$/)		{	delcmd	(); }
+	if ($ENV{PATH_INFO} =~ /^\/list$/) 			{	list	(); }
+	if ($ENV{PATH_INFO} =~ /^\/copy$/) 			{	copy	(); }
 	
 	main ();
 
@@ -200,7 +197,6 @@ sub edit {
 		}
 	} else {
 		$args->{scipertodo} = $login->{sciper} unless $args->{scipertodo};
-#		error ('person_not_found') unless $args->{scipertodo};
 		my @persons = getPersons ($args->{scipertodo});
 		$person 		= $persons[0];
 		$cmd 				= makeCardFromDinfo($person);
@@ -273,7 +269,6 @@ sub show {
 		error ('no_rights') unless canManage ($cmd->{scipertodo});
 	}
 
-#warn "--> show cmd=$cmd->{nocmd}\n";
 
 	my $template 	 = initTempl ('show.tmpl', $cmd);
 
@@ -283,7 +278,6 @@ sub show {
 		if ( isReproStaff() ) {
 			$template->param(submit_button_label => $tmpl_labels->{repro_en_cours}->{$lang} );
 		} else {
-#			$template->param(submit_button_label => $tmpl_labels->{commander}->{$lang} );
 		}
 	} elsif ( $cmd->{etat} eq '3') {
 			$template->param(submit_button_label => $tmpl_labels->{repro_done}->{$lang} );
@@ -301,7 +295,6 @@ sub show {
 #	-------------
 sub valid {
 
-#warn "--> valid args\n".Dumper($args);
 	my $cmd 		 = getCmd($args->{nocmd});
 
 	error ('no_rights') unless canManage ($cmd->{scipertodo});
@@ -372,9 +365,8 @@ warn "--> encours\n" if  $verbose;
 
 #	-------------
 sub donem {
-#warn "donem\n".Dumper($args);
 	$args->{done_return} = 1;
-	foreach my $nocmd (split /\|/, $args->{cmd_todo}) {
+	foreach my $nocmd ("split /\|/", $args->{cmd_todo}) {
 		$args->{nocmd} = $nocmd;
 		done();
 	}
@@ -575,7 +567,6 @@ sub getAdminsEmails {
 		map { 
 			my @admins = $Persons->searchPersons ('sciper', $_->{persid});
 			my $admin = $admins[0];
-#warn "--> valid  $_->{persid}) admin\n".Dumper($admin);	
 			$admins->{$_->{persid}} = {
 				sciper 		=> $admin->{sciper},
 				name 			=> $admin->{name},
@@ -596,7 +587,6 @@ sub list {
 								 : $args->{scipertodo}
 								 	 ? getCmdsBySciper($args->{scipertodo})
 								 	 : ();
-#warn "-->list : $args->{etat}, cards_loop\n".Dumper(@cards_loop);
 	map { 
 		if ($_->{etat} eq '1') {	#	- en saisie
 			$_->{action} = 'edit';
@@ -664,7 +654,6 @@ sub mailto {
 
  	if ($DEBUG) {
  		warn "--> mailto : $dest, $subj\n" if  $verbose;
-# 		return;
  	}
   $dest			 	 = $mailRepro unless $dest;
 
@@ -675,12 +664,10 @@ sub mailto {
   my $subject = encode_mimeword($subj);
   my $replyTo = 'noreply@epfl.ch';
   my $mailFrom= 'noreply@epfl.ch';
-#  my $mailCc	= 'ion.cionca@epfl.ch';
  
   eval {
   	open (MAIL, "| $sendmail -t -F$mailFrom -f$mailFrom") or return;
   	print MAIL qq{To: $dest\n};
-#  	print MAIL qq{Cc: $mailCc\n};
   	print MAIL qq{From: $mailFrom\n};
   	print MAIL qq{Reply-to: $replyTo
 Subject: $subject
@@ -716,7 +703,6 @@ sub isReproStaff {
 
 #--------
 sub isAdmin {
-#warn "--> isAdmin adminUnits\n".Dumper($adminUnits);
 	return 1 if scalar (keys %$adminUnits) > 0;
 	return 0;
 }
@@ -725,7 +711,6 @@ sub isAdmin {
 sub updateCmd {
 	my $cmd = shift;
 
-#warn "--> updateCmd cmd\n".Dumper($cmd) ;	
 	my ($sql, @params, $nocmd);
 	foreach my $field (keys %$cmd) {
 		next if $field =~ /^(nocmd|respname|respfirstname|respemail)$/;
@@ -795,7 +780,6 @@ sub getCmdsByStatus {
 sub getCmdsBySciper {
 	my $scipertodo = shift;
 	return unless $scipertodo;
-#warn "--> getCmdsBySciper : $scipertodo\n" if $verbose;
 	my $sql = qq{select * from cmds where scipertodo=? order by date desc};
 	my $sth = $dbcards->query($sql, $scipertodo);
 	my @cmds; my $resps_scipers;
@@ -813,7 +797,6 @@ sub getCmdsBySciper {
 #--------
 sub getCmd {
 	my $nocmd  = shift;
-#warn "--> getCmd : $nocmd\n";	
 	error ("cmd_not_found") unless $nocmd;
 	
 	my $cmd;
@@ -835,7 +818,6 @@ sub makeCardFromDinfo {
 	error ('person_not_found') unless $person->{sciper};
 
 	my $unitid 		 = $args->{unitid};
-#warn "--> makeCardFromDinfo : person\n".Dumper($person);	
 	
 	my $accred;
 	if ( $unitid ) {
@@ -863,7 +845,6 @@ sub makeCardFromDinfo {
 		phone2		=> $accred->{bottin}->{phones}->[1],
 		adresse		=> $accred->{bottin}->{adresse},
 	};
-#warn "--> makeCardFromDinfo : cmd\n".Dumper($cmd);
 	
 	return $cmd;
 	
@@ -893,7 +874,6 @@ sub setTmplParam {
 	my ($template, $name, $value) = @_;
 	my $max_size = $name eq 'adresse' ? $MAX_SIZE_ADDR : $MAX_SIZE;
 	if ( length($value) > $max_size ) {
-#warn "--> setTmplParam : $name, $value, size=".length($value).", utf8=".Encode::is_utf8($value)."\n";
 		$template->param($name.'_alert'	=> 'class="oversize"') ;
 		$value = substr($value, 0, $max_size);
 		$show_alert = 1;
@@ -1030,11 +1010,9 @@ sub initTempl {
 	setTmplParam ($template, 'phone2', 		$cmd->{phone2});
 	setTmplParam ($template, 'email', 		$cmd->{email});
 	
-#	setTmplParam ($template, 'adresse', 	$cmd->{adresse});
 	$template->param(adresse							=> $cmd->{adresse} );
 	
 	setTmplParam ($template, 'web', 			$cmd->{web});
-#	setTmplParam ($template, 'line4', 		$line4);
 	$line4 =~ s/\r/<br>/ if $cmd->{card_type} eq 'adresse';
 	$template->param(line4							=> $line4 );
 
@@ -1062,11 +1040,6 @@ sub chkArgs {
 				$errmsg = 'wrong_params';
 			}
 		}
-# 		if ($name =~ /^(nocmd)$/i) {
-# 			unless ($value =~ /^(A-Z0-9))$/) {
-# 				$errmsg = "People::params : illegal params";
-# 			}
-# 		}
 
 		$value =~ s/\\a/a/ig;
 		$value =~ s/\\a/a/ig;
@@ -1216,6 +1189,7 @@ warn "--> error : msg=$msg\n";
 
 #--------
 sub authenticate {
+	warn "Tequila:".Dumper(`$tequila`);
   unless ($tequila) {
 		my $tequila_redirect_ports;
 		$tequila_redirect_ports = defined $ENV{'TEQUILA_REDIRECT_PORT'} ? $ENV{'TEQUILA_REDIRECT_PORT'} : 80;
@@ -1230,26 +1204,11 @@ sub authenticate {
 
   $tequila->authenticate ();
   $login->{sciper} 	 = $tequila->{attrs}{uniqueid};
-
 	if ($login->{sciper} eq '104782') {
-	#	- 
-# 	$login->{sciper} = '276008';
-# 	$login->{sciper} = '239809';
-# 	$login->{sciper} = '239809';
-# 	$login->{sciper} = '213902';
-# 	$login->{sciper} = '167714';	#	- m. videlier
-# 	$login->{sciper} = '105556';	#
 	}
 	
 	$login = $Persons->getPerson ( $login->{sciper} );
-	# utf8::encode ($login->{name});
-	# utf8::encode ($login->{firstname});
 
-# 	my $has_statut_perso;
-# 	map { 
-# 		$has_statut_perso = 1 if ($_->{statusid} eq '1' );
-# 	} $Accreds->getAccreds ($login->{sciper});
-# 	error ('no_access') unless $has_statut_perso;
 warn "--> authenticate : $login->{sciper}, $login->{name}, $login->{firstname}\n"; 
   
   $adminUnits = $Accreds->getAllUnitsWhereHasRight($login->{sciper}, 'cartevisite');
@@ -1385,7 +1344,6 @@ sub getFondsForUnits {
 			cf 			=> $data->{cf},
 		};
 	}
-#warn "--> getFondsForUnits fonds\n".Dumper($fonds) if $verbose;
 	return $fonds;
 	
 }
@@ -1539,12 +1497,6 @@ warn "--> getPersons : key=$key\n" if $verbose;
 			$accred->{path1} = '';
 		}
 
-		# utf8::encode ($accred->{path1});
-		# utf8::encode ($accred->{path2});
-		# utf8::encode ($accred->{path3});
-		# utf8::encode ($accred->{fonction});
-
-
 		$accreds->{$data->{unitid}} = $accred;
 	} 
 
@@ -1656,39 +1608,3 @@ sub setCookie {
   print qq{Set-Cookie: $cookie=$value; path=/;  expires=''; secure; HttpOnly\r\n};
 
 }
-
-#	
-# CREATE TABLE `businesscard.cmds` (
-#   `nocmd` varchar(20) CHARACTER SET utf8 NOT NULL,
-#   `card_type` varchar(10) CHARACTER SET utf8 DEFAULT 'adresse',
-#   `date` datetime NOT NULL,
-#   `resp` varchar(10) CHARACTER SET utf8 DEFAULT NULL,
-#   `etat` varchar(10) CHARACTER SET utf8 DEFAULT NULL,
-#   `quantite` varchar(10) CHARACTER SET utf8 DEFAULT NULL,
-#   `scipertodo` varchar(10) CHARACTER SET utf8 NOT NULL,
-#   `cf` varchar(10) CHARACTER SET utf8 NOT NULL,
-#   `fond` varchar(20) CHARACTER SET utf8 NOT NULL,
-#   `path1` varchar(40) CHARACTER SET utf8 DEFAULT NULL,
-#   `path1_hide` char(1) CHARACTER SET utf8 DEFAULT NULL,
-#   `path2` varchar(40) CHARACTER SET utf8 DEFAULT NULL,
-#   `path2_hide` char(1) CHARACTER SET utf8 DEFAULT NULL,
-#   `path3` varchar(40) CHARACTER SET utf8 DEFAULT NULL,
-#   `path3_hide` char(1) CHARACTER SET utf8 DEFAULT NULL,
-#   `path4` varchar(40) CHARACTER SET utf8 DEFAULT NULL,
-#   `title` varchar(10) CHARACTER SET utf8 DEFAULT NULL,
-#   `fonction1` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
-#   `fonction2` varchar(32) CHARACTER SET utf8 DEFAULT NULL,
-#   `adresse` varchar(43) CHARACTER SET utf8 DEFAULT NULL,
-#   `phone1` varchar(40) CHARACTER SET utf8 DEFAULT NULL,
-#   `phone2` varchar(40) CHARACTER SET utf8 DEFAULT NULL,
-#   `web` varchar(40) CHARACTER SET utf8 DEFAULT NULL,
-#   `obs` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-#   `done_by` varchar(10) CHARACTER SET utf8 DEFAULT NULL,
-#   `name` varchar(40) CHARACTER SET utf8 NOT NULL,
-#   `firstname` varchar(40) CHARACTER SET utf8 NOT NULL,
-#   `email` varchar(40) CHARACTER SET utf8 DEFAULT NULL,
-#   `comments` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-#   PRIMARY KEY (`nocmd`),
-#   UNIQUE KEY `nocmd_UNIQUE` (`nocmd`)
-# ) ENGINE=MyISAM DEFAULT CHARSET=utf8
-
