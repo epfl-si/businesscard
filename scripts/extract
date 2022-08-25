@@ -116,11 +116,3 @@ $mail->send_or_die;
 
 print qq{mail envoyé à : $mailSF
 };
-
-
-#--------
-sub utf8tolatin1 {
-    my $string = shift;
-    $string =~ s/([\xC0-\xDF])([\x80-\xBF])/chr(ord($1)<<6&0xC0|ord($2)&0x3F)/eg;
-    return $string;
-}
