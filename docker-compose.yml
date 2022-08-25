@@ -1,13 +1,14 @@
 version: '3.4'
 
 services:
-  web:
+  businesscard_web:
     build: .
-    hostname: dev-businesscard
+    hostname: businesscard_web
+    container_name: businesscard_web
     ports:
       - "8080:8080"
     links:
-      - mysql_businesscard
+      - businesscard_mysql
     environment:
       - TEQUILA_HOST=test-tequila.epfl.ch
       - MOCK_ORACLE=1
@@ -18,9 +19,10 @@ services:
       - ./dbs-dev.conf:/opt/dinfo/etc/dbs.conf
       - ./cgi-bin/businesscard:/var/www/cgi-bin/businesscard
 
-  mysql_businesscard:
+  businesscard_mysql:
     image: mysql:5.5
-    hostname: mysql-businesscard
+    hostname: businesscard_mysql
+    container_name: businesscard_mysql
     environment:
       - MYSQL_ROOT_PASSWORD=1234
       - MYSQL_DATABASE=businesscard
