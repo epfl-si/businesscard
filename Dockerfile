@@ -27,6 +27,7 @@ COPY htdocs/ /var/www/html/
 COPY cgi-bin/ /var/www/cgi-bin/
 COPY private /var/www/private
 COPY ./cgi-bin/tmpl_labels.inc /opt/dinfo/lib/perl/tmpl_labels.inc
+COPY ./conf/businesscard.conf /etc/apache2/conf-enabled/businesscard.conf
 
 COPY conf/docker/docker-entrypoint.sh /
 COPY scripts /var/www/scripts

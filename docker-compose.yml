@@ -17,7 +17,6 @@ services:
       - TEQUILA_REDIRECT_PORT=8080
     volumes:
       - ./dbs-dev.conf:/opt/dinfo/etc/dbs.conf
-      - ./conf/businesscard.conf:/etc/apache2/conf-enabled/businesscard.conf
       - ./cgi-bin/businesscard:/var/www/cgi-bin/businesscard
 
   businesscard_mysql:
