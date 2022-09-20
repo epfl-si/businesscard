@@ -21,8 +21,8 @@ down:
 
 rinse:
 	$(MAKE) down
-	docker volume prune
-	rm conf/docker/initdb/3-accred-mock-data.sql
+	docker volume prune -f
+	# rm conf/docker/initdb/3-accred-mock-data.sql
 
 .PHONY: stop
 stop:
