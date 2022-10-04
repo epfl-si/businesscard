@@ -101,7 +101,7 @@ my $FACULTES = {
 	my $dbcards  = new Cadi::CadiDB ( dbname => 'businesscard',	utf8 => 1, );
 	my $dinfodb  = new Cadi::CadiDB ( dbname => 'dinfo',				utf8 => 1, );
 	my $Accreds  = new Cadi::Accreds ();
-	my $Persons	 = new Cadi::Persons ();
+	my $Persons	 = new Cadi::Persons (utf8 => 1);
 	my $Rights	 = new Accred::Rights ();
 
 	my $req 		 = Cadi::WSUtils::loadreq ();

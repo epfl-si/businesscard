@@ -1,5 +1,6 @@
 	
-	
+	/*!50503 SET character_set_client = utf8mb4 */;
+
 	INSERT INTO accred.accreds (persid,unitid,statusid,classid,posid,datedeb,datefin,datereval,duree,creator,datecreat,origine,comment,author,revalman,ordre,debval,finval) VALUES ('169419','13030',1,4,814,'2018-12-25 00:40:22.0',NULL,NULL,NULL,'000000','2018-12-25 00:40:22.0','p','','000000','n',1,'2018-12-25 00:40:22.0',NULL);
 	INSERT INTO accred.accreds (persid,unitid,statusid,classid,posid,datedeb,datefin,datereval,duree,creator,datecreat,origine,comment,author,revalman,ordre,debval,finval) VALUES ('243371','13030',1,4,294,'2018-10-01 00:00:00.0',NULL,'2019-09-24 00:41:33.0',NULL,'104930','2018-10-02 14:09:16.0','p','','104930','n',1,'2020-01-06 15:23:28.0',NULL);
 	INSERT INTO accred.accreds (persid,unitid,statusid,classid,posid,datedeb,datefin,datereval,duree,creator,datecreat,origine,comment,author,revalman,ordre,debval,finval) VALUES ('121769','13030',1,4,113,'2018-01-25 00:40:10.0',NULL,NULL,NULL,'000000','2018-01-25 00:40:10.0','p','','000000','n',1,'2018-08-22 10:44:27.0',NULL);

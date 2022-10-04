@@ -1,3 +1,5 @@
+	/*!40101 SET @saved_cs_client     = @@character_set_client */;
+	/*!50503 SET character_set_client = utf8mb4 */;
 	INSERT INTO dinfo.sciper (sciper,nom,prenom,`type`,nom_acc,prenom_acc,date_naiss,sexe,canon,nom_usuel,prenom_usuel,nom_usuel_maj,prenom_usuel_maj) VALUES ('106785','AUBOISDORMANT','ABEL','6','Auboisdormant','Abel','01.01.1959','M','obdorm',NULL,NULL,NULL,NULL);
 	INSERT INTO dinfo.sciper (sciper,nom,prenom,`type`,nom_acc,prenom_acc,date_naiss,sexe,canon,nom_usuel,prenom_usuel,nom_usuel_maj,prenom_usuel_maj) VALUES ('121769','ÉPAN','AHMED','6','Épan','Ahmed','01.01.1969','M','epan',NULL,NULL,NULL,NULL);
 	INSERT INTO dinfo.sciper (sciper,nom,prenom,`type`,nom_acc,prenom_acc,date_naiss,sexe,canon,nom_usuel,prenom_usuel,nom_usuel_maj,prenom_usuel_maj) VALUES ('169419','EMBETT','AKIM','6','Embëtt','Akim','01.01.1980','M','enbet',NULL,NULL,NULL,NULL);
