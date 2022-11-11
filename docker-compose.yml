@@ -10,6 +10,7 @@ services:
     links:
       - businesscard_mysql
     environment:
+      - TEQUILA_ENVIRONMENT=test
       - TEQUILA_HOST=test-tequila.epfl.ch
       - MOCK_ORACLE=1
       - SITE_URL=localhost:8080
