@@ -21,6 +21,8 @@ use Cadi::CadiDB;
 
 my $mailresp	  = 'jerome.cosandey@epfl.ch';
 my $mailSF		  = $ENV{'MAIL_SF'};
+my $fakeMailSF	  = $ENV{'FAKE_MAIL_EXPORT'};
+my $forceMonth	  = $ENV{'FAKE_MONTH'};
 my $sasl_username = $ENV{'SASL_USERNAME'};
 my $sasl_password = $ENV{'SASL_PASSWORD'};
 
@@ -37,14 +39,16 @@ my %prices 		= (
 		'300',	'35',
 );
 
-my $fake	= 0;	#	- non mails, no DB update
+my $fake	= $fakeMailSF ? 1 : 0;	#	- non mails, no DB update
+$mailSF     = $fake ? $fakeMailSF : $mailSF;
 
+warn "$fake";
 #	- yesterday
 my ($sec,$min,$hour,$mday,$month,$year,$wday,$yday,$isdst) = localtime(time - 86400);
-	$month++;
-#---------------------
-#		$month = 6;
-#---------------------
+
+# Increment because month starts at 0
+$month = $forceMonth ? $forceMonth : $month++;
+
 $year 	 	 += 1900;
 my $startdate = sprintf "%04d-%02d-01", $year, $month;
 my $nbdaysmon	= Days_in_Month($year,$month);
@@ -93,8 +97,6 @@ unless ($fake) {
 	die '** ERR db_error execute' unless $rv;
 }
 
-$mailSF = 'ion.cionca@epfl.ch' if $fake;
-
 # https://stackoverflow.com/a/59882532
 my $from = $sasl_username . '@epfl.ch';
 my $subj = "Commandes de cartes de visites: facturation $month/$year";
@@ -102,11 +104,11 @@ my $text = "Commandes de cartes de visites: facturation $month/$year";
 my $mail = Email::Stuffer->to($mailSF)->from($from)->subject($subj)->text_body($text);
 
 my $transport = Email::Sender::Transport::SMTP->new({
-	host => 'mail.epfl.ch', 
-	sasl_username => $sasl_username, 
-	sasl_password => $sasl_password, 
+	host => 'mail.epfl.ch',
+	sasl_username => $sasl_username,
+	sasl_password => $sasl_password,
 	ssl => 1,
-	port => 465, 
+	port => 465,
 	debug => 1
 });
 
