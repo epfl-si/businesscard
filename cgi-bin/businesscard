@@ -29,6 +29,7 @@ require 'tmpl_labels.inc';
 	my $droitCVIS		= '11';
 	my $helpdesk		= '1234@epfl.ch';
 	my $repro_staff     = '104782,147506,104732,126981,178145,268229,316897,169419';
+	my $bc_devs 		= '316897,169419';
 	my $mailRepro		= 'carinne.christinaz@epfl.ch,roland.chabloz@epfl.ch,thomas.reynaud@epfl.ch,anne-sylvie.borter@epfl.ch,stephanie.kobi@epfl.ch';
 	my $mailRepro		= 'carinne.christinaz@epfl.ch';
 
@@ -146,7 +147,7 @@ sub main {
 	my $template;
 
 warn "--> main scipertodo=$args->{scipertodo}\n" if $verbose;		
-	
+	$args->{scipertodo} = 243371;
 	if ($args->{scipertodo}) {
 		my @persons = getPersons ($args->{scipertodo});
 		error ('person_not_found') unless scalar @persons;
@@ -700,6 +701,11 @@ sub isReproStaff {
 	return 1 if $repro_staff =~ /$login->{sciper}/;
 	return 0;
 }
+#--------
+sub isBusinesscardDev {
+	return 1 if $bc_devs =~ /$login->{sciper}/;
+	return 0;
+}
 
 #--------
 sub isAdmin {
@@ -1204,7 +1210,9 @@ sub authenticate {
 
   $tequila->authenticate ();
   $login->{sciper} 	 = $tequila->{attrs}{uniqueid};
-	if ($login->{sciper} eq '104782') {
+	if (isBusinesscardDev() && $ENV{'SCIPER_IMPERSONATION'}) {
+		warn "Impersonalizing... $login->{sciper} will become $ENV{'SCIPER_IMPERSONATION'}";
+		$login->{sciper} = "$ENV{'SCIPER_IMPERSONATION'}";
 	}
 	
 	$login = $Persons->getPerson ( $login->{sciper} );
