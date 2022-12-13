@@ -367,7 +367,7 @@ warn "--> encours\n" if  $verbose;
 #	-------------
 sub donem {
 	$args->{done_return} = 1;
-	foreach my $nocmd ("split /\|/", $args->{cmd_todo}) {
+	foreach my $nocmd (split(/\|/, $args->{cmd_todo})) {
 		$args->{nocmd} = $nocmd;
 		done();
 	}
