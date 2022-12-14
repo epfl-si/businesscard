@@ -659,7 +659,7 @@ sub mailto {
 
   unless ($dest) {
 		$subj .= qq{ **ERR : dest vide **}; 
-		$dest  = 'ion.cionca@epfl.ch';
+		$dest  = 'businesscard-ops@groupes.epfl.ch';
   }
   my $subject = encode_mimeword($subj);
   my $replyTo = 'noreply@epfl.ch';

@@ -19,7 +19,7 @@ use Email::Sender::Transport::SMTP;
 use Date::Calc qw(Days_in_Month);
 use Cadi::CadiDB;
 
-my $mailresp	  = 'jerome.cosandey@epfl.ch';
+my $mailresp	  = 'businesscard-ops@groupes.epfl.ch';
 my $mailSF		  = $ENV{'MAIL_SF'};
 my $fakeMailSF	  = $ENV{'FAKE_MAIL_EXPORT'};
 my $forceMonth	  = $ENV{'FAKE_MONTH'};
