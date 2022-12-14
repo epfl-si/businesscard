@@ -2,7 +2,7 @@ FROM ghcr.io/epfl-si/common-libs:v0.2.0
 LABEL maintainer "isas-fsd@groupes.epfl.ch"
 
 USER root
-RUN set -e -x; apt -qy update; apt -qy install apache2 libapache2-mod-perl2; apt clean
+RUN set -e -x; apt -qy update; apt -qy install apache2 libapache2-mod-perl2 msmtp; apt clean
 RUN a2enmod remoteip cgid rewrite
 RUN a2disconf serve-cgi-bin
 
@@ -28,6 +28,10 @@ COPY cgi-bin/ /var/www/cgi-bin/
 COPY private /var/www/private
 COPY ./cgi-bin/tmpl_labels.inc /opt/dinfo/lib/perl/tmpl_labels.inc
 COPY ./conf/businesscard.conf /etc/apache2/conf-enabled/businesscard.conf
+
+# The MSMTP EPFL configuration
+COPY ./conf/docker/msmtprc.conf /etc/msmtprc
+RUN ln -s /usr/bin/msmtp /usr/sbin/sendmail
 
 COPY conf/docker/docker-entrypoint.sh /
 COPY scripts /var/www/scripts
