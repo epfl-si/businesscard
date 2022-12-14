@@ -1,28 +1,15 @@
-initdb/3-accred-mock-data.sql: /keybase/team/epfl_bsnscrd/initdb/3-accred.sql
-	cat $< > $@
-
-.PHONY: up-domq
-up-domq: initdb/3-accred-mock-data.sql
-	$(MAKE) initdb
-	docker-compose up --build
-
 .PHONY: up
 up:
-	docker-compose up --build
-
-.PHONY: up-d
-up-d: initdb/3-accred-mock-data.sql
-	$(MAKE) initdb
-	docker-compose up --build -d
+	docker-compose up --build --force-recreate  --remove-orphans
 
 .PHONY: down
 down:
 	docker-compose down
 
+.PHONY: rinse
 rinse:
 	$(MAKE) down
 	docker volume prune -f
-	# rm conf/docker/initdb/3-accred-mock-data.sql
 
 .PHONY: stop
 stop:
@@ -51,5 +38,3 @@ push:
 .PHONY: run
 run:
 	docker run -it businesscard-test/businesscard bash
-
-
