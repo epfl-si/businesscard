@@ -146,7 +146,6 @@ sub main {
 	my $template;
 
 warn "--> main scipertodo=$args->{scipertodo}\n" if $verbose;		
-	$args->{scipertodo} = 243371;
 	if ($args->{scipertodo}) {
 		my @persons = getPersons ($args->{scipertodo});
 		error ('person_not_found') unless scalar @persons;
