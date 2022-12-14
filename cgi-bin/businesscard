@@ -674,7 +674,7 @@ Content-type: text/html; charset=iso-8859-1
 
 <header>
 <link rel="stylesheet" href="https://web2018.epfl.ch/2.1.0/css/elements.min.css">
-<link rel="stylesheet" href="http://test-businesscard.epfl.ch/styles/businesscard.css">
+<link rel="stylesheet" href="//businesscard.epfl.ch/styles/businesscard.css">
 </header>
 <body style="padding: 20px;">
 
