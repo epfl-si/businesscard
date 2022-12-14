@@ -36,7 +36,7 @@ rm:
 exec:
 	docker exec --env MAIL_SF=jerome.cosandey@epfl.ch --env SASL_USERNAME=noreply-businesscard --env SASL_PASSWORD=$$(grep -A3 'service: ' /keybase/team/epfl_bsnscrd/service.yml | tail -n1 | cut -c 11-) -it $$(docker ps -a --filter "name=businesscard_web" --format "{{.Names}}") bash
 
-	.PHONY: build
+.PHONY: build
 build:
 	docker build . -t businesscard-test/businesscard
 	
