@@ -23,6 +23,8 @@ my $mailresp	  = 'jerome.cosandey@epfl.ch';
 my $mailSF		  = $ENV{'MAIL_SF'};
 my $fakeMailSF	  = $ENV{'FAKE_MAIL_EXPORT'};
 my $forceMonth	  = $ENV{'FAKE_MONTH'};
+my $beginDate  	  = $ENV{'BEGIN_DATE'};
+my $endDate  	  = $ENV{'END_DATE'};
 my $sasl_username = $ENV{'SASL_USERNAME'};
 my $sasl_password = $ENV{'SASL_PASSWORD'};
 
@@ -50,9 +52,9 @@ my ($sec,$min,$hour,$mday,$month,$year,$wday,$yday,$isdst) = localtime(time - 86
 $month = $forceMonth ? $forceMonth : $month++;
 
 $year 	 	 += 1900;
-my $startdate = sprintf "%04d-%02d-01", $year, $month;
+my $startdate = $beginDate ? $beginDate : sprintf "%04d-%02d-01", $year, $month;
 my $nbdaysmon	= Days_in_Month($year,$month);
-my $enddate		= sprintf "%04d-%02d-%02d 23:59:59", $year, $month, $nbdaysmon;
+my $enddate		= $endDate ? $endDate : sprintf "%04d-%02d-%02d 23:59:59", $year, $month, $nbdaysmon;
 
 print qq{Facturation businesscards	du : $startdate au : $enddate
 };
