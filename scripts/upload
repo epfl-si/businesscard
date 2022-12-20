@@ -1,0 +1,98 @@
+#!/usr/bin/perl
+#
+##############################################################################
+#
+# File Name:    upload
+# Author:       Ion CIONCA (Ion.Cionca@epfl.ch) -
+#
+# Note: this script was present on the dinfo server before businesscar app
+#       was migrated on kubernetes. I think it was ment to be called manually
+#       in order to import some business card order directely in the DB.
+#       Let's add it here for historical reason, it should not be used 
+#       anymore. Nicolas Borboën <nicolas.borboen@epfl.ch>
+#
+#########################################################################
+#
+#
+
+use lib '/opt/dinfo/lib/perl';
+#use utf8;
+use Encode qw( decode encode );
+
+use Cadi::CadiDB;
+
+use strict;
+
+my $file = 'cvis.txt';
+
+die "** ERR : non file" unless -f $file;
+
+open (IN, $file) || die "** ERR : open $file : $!";
+
+my $dbcards  = new Cadi::CadiDB ( dbname => 'businesscard',	utf8 => 1, );
+
+while (<IN>) {
+	chomp();
+	$_ =~ s/"//g;
+	my $line = $_;
+#	my $line = decode('iso-8859-1', $line);
+#		 $line = encode('utf-8', $line);
+
+	my ($id, $nocmd, $date, $resp, $scipertodo, $nom, $pnom, $cf, $fond, $quantite, $card_type, $deptinst1, $deptinst2, $deptinst3, $autre1, $autre2, $title, $fonc1, $fonc2, $adr1, $adr2, $adr3, $adr4, $phone_label, $tel, $mobile, $fax, $email, $web, $obs, $etat, $deptinst1_show, $deptinst2_show, $deptinst3_show, $adresse, $comments, $date_modif, $operateur) = split /\t/, $line;
+	next unless $nocmd && $scipertodo && $resp;
+	$etat = $etat eq 'saisie'
+					? '1'
+					: $etat eq 'attente'
+						? '2'
+						: $etat eq 'en cours'
+							? '3'
+							: $etat eq 'archive'
+								? '4'
+								: '5';
+	my $path1_hide = '1' if $deptinst1_show eq 'N';
+	my $path2_hide = '1' if $deptinst2_show eq 'N';
+	my $path3_hide = '1' if $deptinst3_show eq 'N';
+	my $mail = $email if $email =~ /@/;
+	my $sql = qq{insert into cmds set 
+			nocmd 		= ?,
+			card_type = ?,
+			date	 		= ?,
+			resp 			= ?,
+			etat 			= ?,
+			quantite	= ?,
+			scipertodo= ?,
+			mail 			= ?,
+			cf		 		= ?,
+			fond 			= ?,
+			path1		 	= ?,
+			path1_hide= ?,
+			path2		 	= ?,
+			path2_hide= ?,
+			path3		 	= ?,
+			path3_hide= ?,
+			path4		 	= ?,
+			title		 	= ?,
+			fonction1 = ?,
+			fonction2 = ?,
+			adresse	 	= ?,
+			phone1		= ?,
+			phone2		= ?,
+			web 			= ?,
+			obs 			= ?,
+			done_by	 	= ?,
+			name 			= ?,
+			firstname = ?,
+			email		 	= ?,
+			comments	= ?
+	};
+
+	my $sth = $dbcards->prepare($sql);
+	die 'db_error' unless $sth;
+	my $rv = $sth->execute($nocmd, $card_type, $date, $resp, $etat, $quantite, $scipertodo, $mail, $cf, $fond, $deptinst1, $path1_hide, $deptinst2, $path2_hide, $deptinst3, $path3_hide, $autre1, $title, $fonc1, $fonc2, $adresse, $tel, $mobile, $web, $obs, $operateur, $nom, $pnom, $email, $comments);
+	die 'db_error' unless $rv;
+
+	print "$nocmd, $card_type, $date, $resp, $etat, $quantite, $scipertodo, $mail, $cf, $fond, $deptinst1, $path1_hide, $deptinst2, $path2_hide, $deptinst3, $path3_hide, $autre1, $title, $fonc1, $fonc2, $adresse, $tel, $mobile, $web, $obs, $operateur, $nom, $pnom, $email, $comments\n";
+}
+
+close IN;
+
