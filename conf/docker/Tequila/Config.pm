@@ -17,5 +17,6 @@ sub want_test_tequila {
 $sessionsdir = "/var/www/Tequila/Sessions";
 $server = want_test_tequila ? "test-tequila.epfl.ch" : "tequila.epfl.ch";
 $serverurl = "https://${server}/tequila/";
+warn $serverurl;
 
 1;

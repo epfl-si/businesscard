@@ -19,6 +19,10 @@ stop:
 rm:
 	docker rm $$(docker ps -aq --filter "name=business*")
 
+-PHONY: exec-root
+exec-root:
+	docker exec -u root -it businesscard_web bash
+
 .PHONY: exec
 exec:
 	docker exec --env MAIL_SF=businesscard-ops@groupes.epfl.ch --env SASL_USERNAME=noreply-businesscard --env SASL_PASSWORD=$$(grep -A3 'service: ' /keybase/team/epfl_bsnscrd/service.yml | tail -n1 | cut -c 11-) -it $$(docker ps -a --filter "name=businesscard_web" --format "{{.Names}}") bash

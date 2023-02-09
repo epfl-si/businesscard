@@ -90,7 +90,7 @@ my $FACULTES = {
 	my $MAX_SIZE_ADDR	= 43;
 	my $MAX_SIZE_ADDR	= 80;
 	
-	my $tmpldir				= '/var/www/private/tmpl';
+	my $tmpldir				= '/var/www/vhosts/app/private/tmpl/';
 	my $DEBUG 	  		= -f '/opt/dinfo/etc/MASTER' ? 0 : 1;
 	binmode (STDOUT, ':utf8');
 

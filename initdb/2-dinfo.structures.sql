@@ -223,6 +223,51 @@ CREATE TABLE `emails` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+
+--
+-- Table structure for table `isa_etu`
+--
+
+/* Avoid the error from cadi.pm:
+    businesscard_web      | DBD::mysql::st execute failed: Table 'dinfo.isa_etu' doesn't exist at /opt/dinfo/lib/perl/Cadi/CadiDB.pm line 216. 
+*/
+
+DROP TABLE IF EXISTS `isa_etu`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `isa_etu` (
+  `sciper` varchar(6) NOT NULL,
+  `section` varchar(6) DEFAULT NULL,
+  `orientation` varchar(32) DEFAULT NULL,
+  `semestre` varchar(6) DEFAULT NULL,
+  `matricule` varchar(8) DEFAULT NULL,
+  `civilite` char(1) DEFAULT NULL,
+  `statut` char(1) DEFAULT NULL,
+  `categorie` varchar(16) DEFAULT NULL,
+  `adresse1` varchar(36) DEFAULT NULL,
+  `adresse2` varchar(36) DEFAULT NULL,
+  `adresse3` varchar(36) DEFAULT NULL,
+  `echange` varchar(36) DEFAULT NULL,
+  `telephone` varchar(36) DEFAULT NULL,
+  `idunite` varchar(6) DEFAULT NULL,
+  `idpgmdoct` varchar(8) DEFAULT NULL,
+  `libpgmdoct` varchar(64) DEFAULT NULL,
+  `dateexmat` varchar(16) DEFAULT NULL,
+  `periode` varchar(9) DEFAULT NULL,
+  `hiverete` varchar(5) DEFAULT NULL,
+  `uniteaccred` int(11) DEFAULT NULL,
+  `debinscr` date DEFAULT NULL,
+  `branche1` varchar(10) DEFAULT NULL,
+  `branche3` varchar(10) DEFAULT NULL,
+  `nivetude` varchar(10) DEFAULT NULL,
+  `mineur` varchar(64) DEFAULT NULL,
+  `autlieuetud` varchar(64) DEFAULT NULL,
+  `masqannu` varchar(64) DEFAULT NULL,
+  KEY `sciper` (`sciper`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
