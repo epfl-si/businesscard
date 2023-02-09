@@ -8,7 +8,7 @@ $tmpl_labels = {
 		en	=> qq{No access rights},
 	},
 	no_funds => {
-		fr	=> qq{Aucun fond disponible},
+		fr	=> qq{Aucun fonds disponible},
 		en	=> qq{No funds available},
 	},
 	no_users => {
@@ -110,7 +110,7 @@ $tmpl_labels = {
 		en	=> qq{Order not found},
 	},
 	no_fund => {
-		fr => qq{Numéro de fond absent},
+		fr => qq{Numéro de fonds absent},
 		en => qq{Fund numer missing},
 	},
 	fix	=> {
@@ -152,7 +152,7 @@ $tmpl_labels = {
 	},
 
 	label_fond	=> {
-		fr	=> qq{Fond},
+		fr	=> qq{Fonds},
 		en	=> qq{Fund},
 	},
 	label_path1	=> {
@@ -224,11 +224,11 @@ $tmpl_labels = {
 		en => qq{You can modify this businesscard and re-activate the validation process as long as the order has not been processed},
 	},
 	validate_note => {
-		fr => qq{Sélectionner un fond pour Valider et soumettre la commande de cartes de visite},
+		fr => qq{Sélectionner un fonds pour Valider et soumettre la commande de cartes de visite},
 		en => qq{Select a fund to Validate and Submit businesscards order},
 	},
 	fund_select => {
-		fr => qq{Sélectionner un fond },
+		fr => qq{Sélectionner un fonds },
 		en => qq{Select a fund },
 	},
 	queue_note => {
