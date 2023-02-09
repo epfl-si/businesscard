@@ -21,7 +21,6 @@ services:
     volumes:
       - ./dbs-dev.conf:/opt/dinfo/etc/dbs.conf
       - ./cgi-bin/businesscard:/var/www/cgi-bin/businesscard
-      - ./conf/businesscard.conf:/etc/apache2/conf-enabled/businesscard.conf
       - ./scripts/extract:/var/www/scripts/extract
 
   businesscard_mysql:
