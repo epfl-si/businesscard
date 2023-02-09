@@ -17,6 +17,26 @@ USE dinfo;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `annu`
+--
+
+DROP TABLE IF EXISTS `annu`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `annu` (
+  `sciper` char(6) NOT NULL,
+  `unite` varchar(6) DEFAULT NULL,
+  `localid` int(11) DEFAULT NULL,
+  `local` varchar(25) DEFAULT NULL,
+  `telephone1` varchar(16) DEFAULT NULL,
+  `telephone2` varchar(25) DEFAULT NULL,
+  `type` varchar(16) DEFAULT NULL,
+  KEY `sciper` (`sciper`),
+  KEY `unite` (`unite`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `sciper`
 --
 
@@ -200,26 +220,6 @@ CREATE TABLE `emails` (
   `addrlog` varchar(64) DEFAULT NULL,
   `addrphy` varchar(64) DEFAULT NULL,
   PRIMARY KEY (`sciper`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `annu`
---
-
-DROP TABLE IF EXISTS `annu`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `annu` (
-  `sciper` char(6) NOT NULL,
-  `unite` varchar(6) DEFAULT NULL,
-  `localid` int(11) DEFAULT NULL,
-  `local` varchar(25) DEFAULT NULL,
-  `telephone1` varchar(16) DEFAULT NULL,
-  `telephone2` varchar(25) DEFAULT NULL,
-  `type` varchar(16) DEFAULT NULL,
-  KEY `sciper` (`sciper`),
-  KEY `unite` (`unite`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

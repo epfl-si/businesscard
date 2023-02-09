@@ -1,6 +1,5 @@
 USE accred;
 
-DROP TABLE IF EXISTS `accreds`;
 CREATE TABLE `accreds` (
   `persid` char(8) DEFAULT NULL,
   `unitid` char(12) DEFAULT NULL,
@@ -27,7 +26,34 @@ CREATE TABLE `accreds` (
   KEY `datedeb` (`datedeb`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-DROP TABLE IF EXISTS `rights`;
+CREATE TABLE `classes` (
+  `id` mediumint(9) NOT NULL AUTO_INCREMENT,
+  `name` varchar(16) DEFAULT NULL,
+  `labelfr` varchar(64) DEFAULT NULL,
+  `labelen` varchar(64) DEFAULT NULL,
+  `description` varchar(128) DEFAULT NULL,
+  `maillist` varchar(16) DEFAULT NULL,
+  `statusid` int(11) DEFAULT NULL,
+  `debval` datetime DEFAULT NULL,
+  `finval` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `libelle` (`labelfr`)
+) ENGINE=MyISAM AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `positions` (
+  `id` mediumint(9) NOT NULL AUTO_INCREMENT,
+  `oldid` mediumint(9) DEFAULT NULL,
+  `labelfr` varchar(128) DEFAULT NULL,
+  `labelxx` varchar(128) DEFAULT NULL,
+  `labelen` varchar(128) DEFAULT NULL,
+  `restricted` char(1) DEFAULT NULL,
+  `debval` datetime DEFAULT NULL,
+  `finval` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `libelle` (`labelfr`),
+  KEY `unit` (`oldid`)
+) ENGINE=MyISAM AUTO_INCREMENT=1477 DEFAULT CHARSET=latin1;
+
 CREATE TABLE `rights` (
   `id` mediumint(9) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) DEFAULT NULL,
@@ -46,3 +72,61 @@ CREATE TABLE `rights` (
   PRIMARY KEY (`id`),
   KEY `name` (`name`)
 ) ENGINE=MyISAM AUTO_INCREMENT=257 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `rights_statuses` (
+  `rightid` int(11) DEFAULT NULL,
+  `statusid` int(11) DEFAULT NULL,
+  `debval` datetime DEFAULT NULL,
+  `finval` datetime DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE `rights_classes` (
+  `rightid` int(11) DEFAULT NULL,
+  `classid` int(11) DEFAULT NULL,
+  `allowed` char(1) DEFAULT NULL,
+  `defaults` char(1) DEFAULT NULL,
+  `debval` datetime DEFAULT NULL,
+  `finval` datetime DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE `rights_persons` (
+  `persid` char(8) DEFAULT NULL,
+  `unitid` char(12) DEFAULT NULL,
+  `rightid` int(11) DEFAULT NULL,
+  `value` char(1) DEFAULT NULL,
+  `respid` char(8) DEFAULT NULL,
+  `datefin` datetime DEFAULT NULL,
+  `datedel` datetime DEFAULT NULL,
+  `accrdel` varchar(6) DEFAULT NULL,
+  `debval` datetime DEFAULT NULL,
+  `finval` datetime DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE `rights_roles` (
+  `rightid` int(11) DEFAULT NULL,
+  `roleid` int(11) DEFAULT NULL,
+  `debval` datetime DEFAULT NULL,
+  `finval` datetime DEFAULT NULL,
+  `hasrights` char(1) DEFAULT 'y'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE `rights_units` (
+  `rightid` int(11) DEFAULT NULL,
+  `unitid` char(12) DEFAULT NULL,
+  `value` char(1) DEFAULT NULL,
+  `debval` datetime DEFAULT NULL,
+  `finval` datetime DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+CREATE TABLE `statuses` (
+  `id` mediumint(9) NOT NULL AUTO_INCREMENT,
+  `name` varchar(16) DEFAULT NULL,
+  `labelfr` varchar(64) DEFAULT NULL,
+  `labelen` varchar(64) DEFAULT NULL,
+  `description` text,
+  `maillist` varchar(16) DEFAULT NULL,
+  `debval` datetime DEFAULT NULL,
+  `finval` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `libelle` (`labelfr`)
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
