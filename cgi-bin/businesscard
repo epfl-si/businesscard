@@ -28,7 +28,15 @@ require 'tmpl_labels.inc';
 
 	my $droitCVIS		= '11';
 	my $helpdesk		= '1234@epfl.ch';
-	my $repro_staff     = '104782,147506,104732,126981,178145,268229,316897,169419,243371,290361';
+	# 126981 Carinne Christinaz (repro)
+	# 147506 Anne-Sylvie Borter (repro)
+	# 169419 Nicolas Borboën (DSI)
+	# 178145 Thomas Reynaud (repro)
+	# 243371 Dominique Quatravaux (DSI)
+	# 290361 Eric Cardoso (DSI)
+	# 316897 Jérôme Cosandey (DSI)
+	# 331936 Stéphanie Kobi (repro)
+	my $repro_staff	= '104732,104782,126981,147506,169419,178145,243371,290361,316897,331936';
 	my $bc_devs 		= '316897,169419';
 	my $mailRepro		= $ENV{'MAIL_REPRO'} || 'carinne.christinaz@epfl.ch';
 
