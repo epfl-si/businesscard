@@ -109,8 +109,8 @@ my $transport = Email::Sender::Transport::SMTP->new({
 	host => 'mail.epfl.ch',
 	sasl_username => $sasl_username,
 	sasl_password => $sasl_password,
-	ssl => 1,
-	port => 465,
+	ssl => 'starttls',
+	port => 587,
 	debug => 1
 });
 

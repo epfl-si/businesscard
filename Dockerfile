@@ -6,10 +6,12 @@ USER 0
 # System packages
 ################################################################################
 RUN apt-get update && apt-get install -y \
+        ca-certificates \
         cpanminus \
         gcc \
         libdbi-perl \
         libnet-ssleay-perl \
+        libemail-sender-perl \
         libtext-unidecode-perl \
         libwww-perl \
         make \
@@ -17,6 +19,8 @@ RUN apt-get update && apt-get install -y \
         openssl \
         unzip \
     --no-install-recommends && rm -rf /var/lib/apt/lists/*
+
+RUN update-ca-certificates
 
 COPY cpanfile cpanfile
 RUN cpanm --installdeps --notest . || ( cat /root/.cpanm/work/*/build.log; exit 1 )
