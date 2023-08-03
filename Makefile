@@ -1,10 +1,10 @@
 .PHONY: up
 up:
-	docker-compose up --build --force-recreate  --remove-orphans
+	docker compose up --build --force-recreate --remove-orphans
 
 .PHONY: down
 down:
-	docker-compose down
+	docker compose down
 
 .PHONY: rinse
 rinse:
