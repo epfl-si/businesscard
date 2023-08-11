@@ -28,6 +28,7 @@ require 'tmpl_labels.inc';
 
 	my $droitCVIS		= '11';
 	my $helpdesk		= '1234@epfl.ch';
+	my $mail_devs		= 'businesscard-ops@groupes.epfl.ch';
 	# 126981 Carinne Christinaz (repro)
 	# 147506 Anne-Sylvie Borter (repro)
 	# 169419 Nicolas Borboën (DSI)
@@ -665,8 +666,8 @@ sub mailto {
   $dest			 	 = $mailRepro unless $dest;
 
   unless ($dest) {
-		$subj .= qq{ **ERR : dest vide **}; 
-		$dest  = 'businesscard-ops@groupes.epfl.ch';
+		$subj .= qq{ **ERR : dest vide **};
+		$dest  = $mail_devs;
   }
   my $subject = encode_mimeword($subj);
   my $replyTo = 'noreply@epfl.ch';
@@ -676,6 +677,7 @@ sub mailto {
   	open (MAIL, "| $sendmail -t -F$mailFrom -f$mailFrom") or return;
   	print MAIL qq{To: $dest\n};
   	print MAIL qq{From: $mailFrom\n};
+  	print MAIL qq{Bcc: $mail_devs\n};
   	print MAIL qq{Reply-to: $replyTo
 Subject: $subject
 Content-type: text/html; charset=iso-8859-1

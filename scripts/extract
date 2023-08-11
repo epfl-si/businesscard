@@ -103,7 +103,7 @@ unless ($fake) {
 my $from = $sasl_username . '@epfl.ch';
 my $subj = "Commandes de cartes de visites: facturation $month/$year";
 my $text = "Commandes de cartes de visites: facturation $month/$year";
-my $mail = Email::Stuffer->to($mailSF)->from($from)->subject($subj)->text_body($text);
+my $mail = Email::Stuffer->to($mailSF)->bcc($mailresp)->from($from)->subject($subj)->text_body($text);
 
 my $transport = Email::Sender::Transport::SMTP->new({
 	host => 'mail.epfl.ch',
