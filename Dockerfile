@@ -50,6 +50,9 @@ RUN ln -s /usr/bin/msmtp /usr/sbin/sendmail
 COPY conf/docker/docker-entrypoint.sh /
 COPY scripts /var/www/scripts
 
+# Temporary fix for OpenShift 4
+RUN sed -i "s#key => \$requestkey,#key => \$requestkey, allowedrequesthosts => '10.180.21.0/24'#" /opt/dinfo/lib/perl/Tequila/Client.pm
+
 USER 1001
 
 ENV TERM=xterm
