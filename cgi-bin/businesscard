@@ -35,10 +35,10 @@ require 'tmpl_labels.inc';
 	# 178145 Thomas Reynaud (repro)
 	# 243371 Dominique Quatravaux (DSI)
 	# 290361 Eric Cardoso (DSI)
-	# 316897 Jérôme Cosandey (DSI)
+	# 263877 Olivier Bieler (DSI)
 	# 331936 Stéphanie Kobi (repro)
-	my $repro_staff	= '104732,104782,126981,147506,169419,178145,243371,290361,316897,331936';
-	my $bc_devs 		= '316897,169419';
+	my $repro_staff	= '104732,104782,126981,147506,169419,178145,243371,290361,263877,331936';
+	my $bc_devs 		= '263877,169419';
 	my $mailRepro		= $ENV{'MAIL_REPRO'} || 'carinne.christinaz@epfl.ch';
 
 	my $verbose			= 0;

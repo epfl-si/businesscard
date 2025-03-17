@@ -9,7 +9,7 @@ INSERT INTO dinfo.sciper (sciper,nom,prenom,`type`,nom_acc,prenom_acc,date_naiss
 INSERT INTO dinfo.sciper (sciper,nom,prenom,`type`,nom_acc,prenom_acc,date_naiss,sexe,canon,nom_usuel,prenom_usuel,nom_usuel_maj,prenom_usuel_maj)
 	VALUES ('243371','PROVIST','ALAIN','6','Provist','Alain','01.01.1975','M','provist',NULL,'Alain',NULL,'ALAIN');
 INSERT INTO dinfo.sciper (sciper,nom,prenom,`type`,nom_acc,prenom_acc,date_naiss,sexe,canon,nom_usuel,prenom_usuel,nom_usuel_maj,prenom_usuel_maj)
-	VALUES ('316897','BERMAN','ALDO','6','Berman','Aldô','01.01.2000','M','berman',NULL,NULL,NULL,NULL);
+	VALUES ('263877','BERMAN','ALDO','6','Berman','Aldô','01.01.2000','M','berman',NULL,NULL,NULL,NULL);
 
 INSERT INTO dinfo.allunits (id_unite, sigle, libelle, libelle_en, date_debut, date_fin, hierarchie, niveau, id_parent, `type`, resp_unite, cmpl_type, unittype, adresse_1, adresse_2, adresse_3, adresse_4, ville, pays, cf, level1, level2, level3, level4, url)
 	VALUES(10000, 'EPFL', 'Ecole polytechnique fédérale de Lausanne', '', '2002-01-01 00:00:00.0', NULL, 'EPFL', 1, 0, 'E', '107537', 'FS', 6, 'EPFL PRES', 'CE 3 316 (Centre Est)', 'Station 1', 'CH-1015 Lausanne', '', NULL, '1028', 10000, NULL, NULL, NULL, 'https://www.epfl.ch/');
